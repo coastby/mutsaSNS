@@ -9,6 +9,10 @@ public class UserException extends RuntimeException{
     private UserErrorCode userErrorCode;
     private String message;
 
+    public UserException(UserErrorCode userErrorCode) {
+        this.userErrorCode = userErrorCode;
+    }
+
     @Override
     public String toString() {
         if (message == null) return userErrorCode.getMessage();
