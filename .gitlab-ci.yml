@@ -6,8 +6,6 @@ package:
   stage: dockerbuild-push
   services:
     - docker:dind          #도커 안에서 도커를 빌드할 때 주는 옵션
-  tags:
-    - docker_build
   before_script:
     - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
   script:
