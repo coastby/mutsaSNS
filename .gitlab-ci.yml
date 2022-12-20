@@ -6,10 +6,13 @@ package:
   stage: dockerbuild-push
   services:
     - docker:dind          #도커 안에서 도커를 빌드할 때 주는 옵션
+  tags:
+    - docker_build
   before_script:
-    - docker login registry.gitlab.com -u $GITLAB_ID -p $GITLAB_PASSWORD
+    - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
   script:
-    - docker build -t registry.gitlab.com/$GITLAB_ID/$PROJECT_NAME .
-    - docker push registry.gitlab.com/$GITLAB_ID/$PROJECT_NAME
+    - export IMG_TAG=${CI_REGISTRY_IMAGE}:latest
+    - docker build -t $IMG_TAG --build-arg PROJECT_NAME=$CI_PROJECT_NAME .
+    - docker push $IMG_TAG
   after_script:
     - docker logout
