@@ -1,8 +1,10 @@
 package com.example.likelionmutsasnsproject.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class Response<T> {
     private String resultCode;
     private T result;

@@ -6,7 +6,7 @@ spring:
   #jpa ??
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

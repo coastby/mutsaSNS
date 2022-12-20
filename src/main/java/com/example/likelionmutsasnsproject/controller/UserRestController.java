@@ -20,10 +20,11 @@ import java.net.URI;
 public class UserRestController {
     private final UserService userService;
 
-    @PostMapping(value = "/join")
+    @PostMapping(value = "/join")       //회원가입
     public ResponseEntity<Response<UserJoinResponse>> join(@RequestBody UserJoinRequest request){
         UserJoinResponse userJoinResponse = userService.join(request);
-        return ResponseEntity.created(URI.create("/api/v1/users"+userJoinResponse.getId())).body(Response.success(userJoinResponse));     //성공 시 상태코드 : 201
+        return ResponseEntity.created(URI.create("/api/v1/users/"+userJoinResponse.getUserId()))     //성공 시 상태코드 : 201
+                .body(Response.success(userJoinResponse));
     }
 
 }
