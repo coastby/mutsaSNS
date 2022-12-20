@@ -12,4 +12,8 @@ public class HelloRestController {
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok().body("hello");
     }
+    @GetMapping(value = "/good")
+    public ResponseEntity<String> sayGood() {
+        return ResponseEntity.ok().body("good");
+    }
 }
