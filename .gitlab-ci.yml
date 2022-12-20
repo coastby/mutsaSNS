@@ -7,7 +7,7 @@ package:
   services:
     - docker:dind          #도커 안에서 도커를 빌드할 때 주는 옵션
   before_script:
-    - docker login registry.gitlab.com -u $CI_REGISTRY_USER --p $CI_REGISTRY_PASSWORD
+    - docker login registry.gitlab.com -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
   script:
     - export IMG_TAG=${CI_REGISTRY_IMAGE}:latest  #환경 변수 설정, CI_REGISTRY_IMAGE : 이미지에 사용하는 이름
     - docker build -t $IMG_TAG --build-arg PROJECT_NAME=$CI_PROJECT_NAME .
