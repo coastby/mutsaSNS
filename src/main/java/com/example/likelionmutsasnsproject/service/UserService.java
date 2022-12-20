@@ -16,11 +16,11 @@ public class UserService {
 
     public UserJoinResponse join(UserJoinRequest request) {
         //아이디 중복 시 예외 발생
-
+        userRepository.findByUserName(request.getUserName())
+                .ifPresent(user -> {throw new RuntimeException("동일 아이디");}); //-> custom exception으로 교체예정
         //비밀 번호 인코딩해서 DB 저장
         User saved = userRepository.save(request.toEntity(encoder.encode(request.getPassword())));
 
         return UserJoinResponse.from(saved);
-
     }
 }
