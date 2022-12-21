@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionManager {
     @ExceptionHandler(PostException.class)
-    public ResponseEntity<?> postExceptionHandler(UserException e){
-        return ResponseEntity.status(e.getUserErrorCode().getStatus())
-                .body(Response.error(e.getUserErrorCode().name(), e.toString()));
+    public ResponseEntity<?> postExceptionHandler(PostException e){
+        return ResponseEntity.status(e.getPostErrorCode().getStatus())
+                .body(Response.error(new ErrorResult(e.getPostErrorCode().name(), e.toString())));
     }
     @ExceptionHandler(UserException.class)
     public ResponseEntity<?> userExceptionHandler(UserException e){
         return ResponseEntity.status(e.getUserErrorCode().getStatus())
-                .body(Response.error(e.getUserErrorCode().name(), e.toString()));
+                .body(Response.error(new ErrorResult(e.getUserErrorCode().name(), e.toString())));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Response.error(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR), e.getMessage()));
+                .body(Response.error(new ErrorResult("INTERNAL_SERVER_ERROR", e.getMessage())));
     }
 }

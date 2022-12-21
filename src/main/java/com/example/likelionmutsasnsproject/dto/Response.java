@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.dto;
 
+import com.example.likelionmutsasnsproject.exception.ErrorResult;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,8 +10,8 @@ public class Response<T> {
     private String resultCode;
     private T result;
 
-    public static Response<String> error(String resultCode, String message){
-        return new Response(resultCode, message);
+    public static Response<ErrorResult> error(ErrorResult errorResult){
+        return new Response<>("ERROR", errorResult);
     }
     public static <T> Response<T> success(T result){
         return new Response<>("SUCCESS", result);

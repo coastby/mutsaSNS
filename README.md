@@ -17,6 +17,7 @@
 #### 프로젝트 설정
 - [x] entity 생성
 - [ ] security 설정
+- [x] 예외처리, custom exception
 
 #### 기능 개발
 ##### 회원
