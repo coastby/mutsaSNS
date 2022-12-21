@@ -2,13 +2,14 @@ package com.example.likelionmutsasnsproject.controller;
 
 
 import com.example.likelionmutsasnsproject.dto.*;
+import com.example.likelionmutsasnsproject.exception.ErrorResponse;
+import com.example.likelionmutsasnsproject.exception.UserErrorCode;
+import com.example.likelionmutsasnsproject.exception.UserException;
+import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -17,6 +18,7 @@ import java.net.URI;
 @RequestMapping("/api/v1/users")
 public class UserRestController {
     private final UserService userService;
+    private final UserLoginService userLoginService;
 
     @PostMapping(value = "/join")       //회원가입
     public ResponseEntity<Response<UserJoinResponse>> join(@RequestBody UserJoinRequest request){
@@ -27,7 +29,14 @@ public class UserRestController {
 
     @PostMapping(value = "/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request){
-        UserLoginResponse response = userService.login(request);
+        UserLoginResponse response = userLoginService.login(request);
         return ResponseEntity.ok().body(response);
     }
+    @GetMapping(value = "/exception")
+    public ResponseEntity<?> userException(){
+        UserException e = new UserException(UserErrorCode.INVALID_PERMISSION);
+        return ResponseEntity.status(e.getUserErrorCode().getStatus())
+                .body(Response.error(new ErrorResponse(e.getUserErrorCode().name(), e.toString())));
+    }
+
 }

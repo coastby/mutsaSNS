@@ -16,6 +16,6 @@ public class PostException extends RuntimeException{
     @Override
     public String toString() {
         if (message == null) return postErrorCode.getMessage();
-        return String.format("%s. %s", postErrorCode.getMessage(), message);
+        return String.format("%s %s", postErrorCode.getMessage(), message);
     }
 }

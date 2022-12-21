@@ -16,6 +16,6 @@ public class UserException extends RuntimeException{
     @Override
     public String toString() {
         if (message == null) return userErrorCode.getMessage();
-        return String.format("%s. %s", userErrorCode.getMessage(), message);
+        return String.format("%s %s", userErrorCode.getMessage(), message);
     }
 }

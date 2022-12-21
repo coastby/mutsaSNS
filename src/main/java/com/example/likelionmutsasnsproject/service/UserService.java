@@ -17,8 +17,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
     private final BCryptPasswordEncoder encoder;
-    private final JwtUtil jwtUtil;
+
 
     public UserJoinResponse join(UserJoinRequest request) {
         //아이디 중복 시 예외 발생
@@ -31,19 +32,11 @@ public class UserService {
         return UserJoinResponse.from(saved);
     }
 
-    public UserLoginResponse login(UserLoginRequest request) {
-        //아이디가 존재하는지 확인
-        User user = userRepository.findByUserName(request.getUserName())
-                .orElseThrow(() -> new UserException(UserErrorCode.USERNAME_NOT_FOUND, "아이디가 틀렸습니다."));
 
-        //비밀번호가 일치하는지 확인
-        if(!encoder.matches(request.getPassword(), user.getPassword())){
-            throw new UserException(UserErrorCode.INVALID_PASSWORD);
-        }
 
-        //토큰 생성
-        String token = jwtUtil.generateToken(user.getUserName(), user.getRole());
+    public User getUserByUserName(String userName){
 
-        return new UserLoginResponse(token);
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UserException(UserErrorCode.USERNAME_NOT_FOUND));
     }
 }

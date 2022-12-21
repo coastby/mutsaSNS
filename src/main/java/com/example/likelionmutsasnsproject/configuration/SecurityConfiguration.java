@@ -1,6 +1,10 @@
 package com.example.likelionmutsasnsproject.configuration;
 
+import com.example.likelionmutsasnsproject.security.CustomAccessDeniedHandler;
+import com.example.likelionmutsasnsproject.security.JwtExceptionFilter;
+import com.example.likelionmutsasnsproject.security.JwtFilter;
 import com.example.likelionmutsasnsproject.service.UserService;
+import com.example.likelionmutsasnsproject.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
 
     @Bean
@@ -25,14 +31,21 @@ public class SecurityConfiguration {
                 .httpBasic().disable()
                 .csrf().disable()
                 .cors().and()
-                .authorizeRequests()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1/posts").authenticated()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
-//                .addFilterBefore(new JwtFilter(userService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
+                .antMatchers( HttpMethod.GET, "/api/v1/posts").permitAll()
+//                .antMatchers("/api/v1/posts").authenticated()
+                .anyRequest().hasRole("ADMIN")
+
+                .and()
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtFilter.class)
                 .build();
     }
 }
