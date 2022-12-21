@@ -8,6 +8,7 @@ import com.example.likelionmutsasnsproject.dto.UserLoginResponse;
 import com.example.likelionmutsasnsproject.exception.UserErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
+import com.example.likelionmutsasnsproject.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final JwtUtil jwtUtil;
 
     public UserJoinResponse join(UserJoinRequest request) {
         //아이디 중복 시 예외 발생
@@ -30,6 +32,18 @@ public class UserService {
     }
 
     public UserLoginResponse login(UserLoginRequest request) {
-        return new UserLoginResponse("token");
+        //아이디가 존재하는지 확인
+        User user = userRepository.findByUserName(request.getUserName())
+                .orElseThrow(() -> new UserException(UserErrorCode.USERNAME_NOT_FOUND, "아이디가 틀렸습니다."));
+
+        //비밀번호가 일치하는지 확인
+        if(!encoder.matches(request.getPassword(), user.getPassword())){
+            throw new UserException(UserErrorCode.INVALID_PASSWORD);
+        }
+
+        //토큰 생성
+        String token = jwtUtil.generateToken(user.getUserName(), user.getRole());
+
+        return new UserLoginResponse(token);
     }
 }
