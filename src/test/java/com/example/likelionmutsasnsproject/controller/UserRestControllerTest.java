@@ -34,9 +34,7 @@ class UserRestControllerTest {
     ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
-
     UserJoinRequest userJoinRequest = new UserJoinRequest("hoon", "hi");
-
 
 
     /**
@@ -81,20 +79,20 @@ class UserRestControllerTest {
     @Test
     @DisplayName("로그인 성공")
     void login_success() throws Exception {
-        given(userService.join(userJoinRequest))
-                .willThrow(new UserException(UserErrorCode.DUPLICATED_USER_NAME));
+        given(userService.login(userLoginRequest))
+                .willReturn(new UserLoginResponse("토큰같은문자열"));
 
         mockMvc.perform(
-                        post("/api/v1/users/join")
+                        post("/api/v1/users/login")
                                 .with(csrf())
-                                .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                                .content(objectMapper.writeValueAsBytes(userLoginRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_USER_NAME"))
-                .andExpect(jsonPath("$.result.message").value("UserName이 중복됩니다."))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.jwt").value("토큰같은문자열"))
                 .andDo(print());
-        verify(userService).join(userJoinRequest);
-
+        verify(userService).login(userLoginRequest);
     }
+
+
 
 }
