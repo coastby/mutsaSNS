@@ -2,6 +2,8 @@ package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.dto.UserJoinRequest;
 import com.example.likelionmutsasnsproject.dto.UserJoinResponse;
+import com.example.likelionmutsasnsproject.dto.UserLoginRequest;
+import com.example.likelionmutsasnsproject.dto.UserLoginResponse;
 import com.example.likelionmutsasnsproject.exception.UserErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserService;
@@ -35,6 +37,7 @@ class UserRestControllerTest {
     @Autowired
     private MockMvc mockMvc;
     UserJoinRequest userJoinRequest = new UserJoinRequest("hoon", "hi");
+    UserLoginRequest userLoginRequest = new UserLoginRequest("hoon", "hi");
 
 
     /**
@@ -80,7 +83,7 @@ class UserRestControllerTest {
     @DisplayName("로그인 성공")
     void login_success() throws Exception {
         given(userService.login(userLoginRequest))
-                .willReturn(new UserLoginResponse("토큰같은문자열"));
+                .willReturn(new UserLoginResponse("token"));
 
         mockMvc.perform(
                         post("/api/v1/users/login")
@@ -88,7 +91,7 @@ class UserRestControllerTest {
                                 .content(objectMapper.writeValueAsBytes(userLoginRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.jwt").value("토큰같은문자열"))
+                .andExpect(jsonPath("$.result.jwt").value("token"))
                 .andDo(print());
         verify(userService).login(userLoginRequest);
     }

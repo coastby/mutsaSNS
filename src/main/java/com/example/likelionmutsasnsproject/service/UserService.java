@@ -3,6 +3,8 @@ package com.example.likelionmutsasnsproject.service;
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.UserJoinRequest;
 import com.example.likelionmutsasnsproject.dto.UserJoinResponse;
+import com.example.likelionmutsasnsproject.dto.UserLoginRequest;
+import com.example.likelionmutsasnsproject.dto.UserLoginResponse;
 import com.example.likelionmutsasnsproject.exception.UserErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
@@ -25,5 +27,9 @@ public class UserService {
         User saved = userRepository.save(request.toEntity(encoder.encode(request.getPassword())));
 
         return UserJoinResponse.from(saved);
+    }
+
+    public UserLoginResponse login(UserLoginRequest request) {
+        return new UserLoginResponse("token");
     }
 }
