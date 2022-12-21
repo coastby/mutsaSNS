@@ -12,6 +12,7 @@ import java.io.IOException;
 
 @Component
 @Slf4j
+//인가 관련 예외 처리
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {

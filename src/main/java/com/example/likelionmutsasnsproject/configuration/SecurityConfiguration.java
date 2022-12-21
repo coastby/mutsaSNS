@@ -1,6 +1,7 @@
 package com.example.likelionmutsasnsproject.configuration;
 
 import com.example.likelionmutsasnsproject.security.CustomAccessDeniedHandler;
+import com.example.likelionmutsasnsproject.security.CustomAuthenticationEntryPoint;
 import com.example.likelionmutsasnsproject.security.JwtExceptionFilter;
 import com.example.likelionmutsasnsproject.security.JwtFilter;
 import com.example.likelionmutsasnsproject.service.UserService;
@@ -20,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-    private final UserService userService;
     private final JwtUtil jwtUtil;
     private final JwtExceptionFilter jwtExceptionFilter;
 
@@ -37,12 +37,14 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
-                .antMatchers( HttpMethod.GET, "/api/v1/posts").permitAll()
-//                .antMatchers("/api/v1/posts").authenticated()
+//                .antMatchers( HttpMethod.GET, "/api/v1/posts").permitAll()
+                .antMatchers("/api/v1/posts").authenticated()
                 .anyRequest().hasRole("ADMIN")
 
                 .and()
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()
                 .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtFilter.class)

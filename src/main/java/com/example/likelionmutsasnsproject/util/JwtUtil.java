@@ -64,18 +64,13 @@ public class JwtUtil {
         } catch(MalformedJwtException | IllegalArgumentException e){
             log.error("바르지 않은 형식의 토큰입니다. : {}", token);
             throw new UserException(UserErrorCode.INVALID_TOKEN, "바르지 않은 형식의 토큰입니다.");
-        } catch (Exception e){
-            log.error("바르지 않은 토큰입니다. : {}", token);
-            throw new UserException(UserErrorCode.INVALID_TOKEN, "알 수 없는 토큰 에러");
-
         }
     }
-    //claims에서 userId 꺼내는 메서드
+    //token으로 authentication 꺼내는 메서드
     public Authentication getAuthentication(String token){
         String userName = extractClaims(token).get("userName", String.class);
         User user = userService.getUserByUserName(userName);        //exception 처리????
         return new UsernamePasswordAuthenticationToken(user.getUserName(), null,
                 List.of(new SimpleGrantedAuthority(user.getRole().name())));
-
     }
 }
