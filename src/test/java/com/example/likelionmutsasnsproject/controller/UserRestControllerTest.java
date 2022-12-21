@@ -91,7 +91,41 @@ class UserRestControllerTest {
                                 .content(objectMapper.writeValueAsBytes(userLoginRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.jwt").value("token"))
+                .andExpect(jsonPath("$.jwt").value("token"))
+                .andDo(print());
+        verify(userService).login(userLoginRequest);
+    }
+    @Test
+    @DisplayName("로그인 실패 - 아이디가 없는 경우")
+    void login_fail_유저네임_없음() throws Exception {
+        given(userService.login(userLoginRequest))
+                .willThrow(new UserException(UserErrorCode.USERNAME_NOT_FOUND));
+
+        mockMvc.perform(
+                        post("/api/v1/users/login")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.result.errorCode").value("USERNAME_NOT_FOUND"))
+                .andExpect(jsonPath("$.result.message").value("Not founded"))
+                .andDo(print());
+        verify(userService).login(userLoginRequest);
+    }
+    @Test
+    @DisplayName("로그인 실패 - 비밀번호 틀림")
+    void login_fail_비밀번호_틀림() throws Exception {
+        given(userService.login(userLoginRequest))
+                .willThrow(new UserException(UserErrorCode.INVALID_PASSWORD));
+
+        mockMvc.perform(
+                        post("/api/v1/users/login")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"))
+                .andExpect(jsonPath("$.result.message").value("패스워드가 잘못되었습니다."))
                 .andDo(print());
         verify(userService).login(userLoginRequest);
     }
