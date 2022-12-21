@@ -1,9 +1,7 @@
 package com.example.likelionmutsasnsproject.controller;
 
 
-import com.example.likelionmutsasnsproject.dto.Response;
-import com.example.likelionmutsasnsproject.dto.UserJoinRequest;
-import com.example.likelionmutsasnsproject.dto.UserJoinResponse;
+import com.example.likelionmutsasnsproject.dto.*;
 import com.example.likelionmutsasnsproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +23,12 @@ public class UserRestController {
         UserJoinResponse userJoinResponse = userService.join(request);
         return ResponseEntity.created(URI.create("/api/v1/users/"+userJoinResponse.getUserId()))     //성공 시 상태코드 : 201
                 .body(Response.success(userJoinResponse));
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<Response<UserLoginResponse>> login(@RequestBody UserLoginRequest request){
+        UserLoginResponse response = userService.login(request);
+        return ResponseEntity.ok().body(Response.success(response));
     }
 
 }

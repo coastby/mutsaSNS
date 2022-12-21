@@ -95,7 +95,4 @@ class UserRestControllerTest {
                 .andDo(print());
         verify(userService).login(userLoginRequest);
     }
-
-
-
 }
