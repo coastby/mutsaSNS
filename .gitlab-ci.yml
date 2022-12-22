@@ -2,6 +2,8 @@ stages:
   - dockerbuild-push
 
 package:
+  only:
+    - main
   image: docker:latest     #도커 위에서 빌드를 한다
   stage: dockerbuild-push
   services:

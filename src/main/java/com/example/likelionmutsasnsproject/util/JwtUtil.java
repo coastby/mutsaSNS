@@ -2,7 +2,7 @@ package com.example.likelionmutsasnsproject.util;
 
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.UserRole;
-import com.example.likelionmutsasnsproject.exception.UserErrorCode;
+import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserService;
 import io.jsonwebtoken.*;
@@ -15,10 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.security.SignatureException;
 import java.util.Date;
 import java.util.List;
 
@@ -57,17 +55,17 @@ public class JwtUtil {
             return Jwts.parserBuilder().setSigningKey(makeKey()).build().parseClaimsJws(token).getBody();
         } catch(ExpiredJwtException e){
             log.error("만료된 토큰입니다. : {}", token);
-            throw new UserException(UserErrorCode.INVALID_TOKEN, "만료된 토큰입니다.");
+            throw new UserException(ErrorCode.INVALID_TOKEN, "만료된 토큰입니다.");
         } catch(UnsupportedJwtException e){
             log.error("지원하지 않는 토큰입니다. : {}", token);
-            throw new UserException(UserErrorCode.INVALID_TOKEN, "지원하지 않는 토큰입니다.");
+            throw new UserException(ErrorCode.INVALID_TOKEN, "지원하지 않는 토큰입니다.");
         } catch(MalformedJwtException | IllegalArgumentException e){
             log.error("바르지 않은 형식의 토큰입니다. : {}", token);
-            throw new UserException(UserErrorCode.INVALID_TOKEN, "바르지 않은 형식의 토큰입니다.");
+            throw new UserException(ErrorCode.INVALID_TOKEN, "바르지 않은 형식의 토큰입니다.");
         }
     }
     //token으로 authentication 꺼내는 메서드
-    public Authentication getAuthentication(String token){
+    public UsernamePasswordAuthenticationToken getAuthentication(String token){
         String userName = extractClaims(token).get("userName", String.class);
         User user = userService.getUserByUserName(userName);
         return new UsernamePasswordAuthenticationToken(user.getUserName(), null,

@@ -35,7 +35,7 @@ class PostRestControllerTest {
     PostAddRequest postAddRequest = new PostAddRequest("merry", "christmas");
 
     /**
-     * 포스트 작성
+     * 포스트 작성 테스트
      * **/
     @Test
     @DisplayName("포스트 작성 성공")

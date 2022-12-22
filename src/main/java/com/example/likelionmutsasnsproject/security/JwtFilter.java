@@ -3,8 +3,10 @@ package com.example.likelionmutsasnsproject.security;
 import com.example.likelionmutsasnsproject.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -43,7 +45,8 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         //token을 authentication 만들기
-        Authentication authentication = jwtUtil.getAuthentication(token);
+        UsernamePasswordAuthenticationToken authentication = jwtUtil.getAuthentication(token);
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);

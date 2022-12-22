@@ -3,7 +3,7 @@ package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.dto.*;
 import com.example.likelionmutsasnsproject.exception.ErrorResponse;
-import com.example.likelionmutsasnsproject.exception.UserErrorCode;
+import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
@@ -34,9 +34,8 @@ public class UserRestController {
     }
     @GetMapping(value = "/exception")
     public ResponseEntity<?> userException(){
-        UserException e = new UserException(UserErrorCode.INVALID_PERMISSION);
-        return ResponseEntity.status(e.getUserErrorCode().getStatus())
-                .body(Response.error(new ErrorResponse(e.getUserErrorCode().name(), e.toString())));
+        UserException e = new UserException(ErrorCode.INVALID_PERMISSION);
+        return ResponseEntity.status(e.getErrorCode().getStatus())
+                .body(Response.error(new ErrorResponse(e.getErrorCode(), e.toString())));
     }
-
 }

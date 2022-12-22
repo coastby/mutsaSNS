@@ -2,7 +2,7 @@ package com.example.likelionmutsasnsproject.security;
 
 import com.example.likelionmutsasnsproject.dto.Response;
 import com.example.likelionmutsasnsproject.exception.ErrorResponse;
-import com.example.likelionmutsasnsproject.exception.UserErrorCode;
+import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ObjectMapper objectMapper = new ObjectMapper();
         log.error("인증에 실패했습니다.");
-        UserException e = new UserException(UserErrorCode.INVALID_PERMISSION, "인증에 실패했습니다.");
-        response.setStatus(e.getUserErrorCode().getStatus().value());
+        UserException e = new UserException(ErrorCode.INVALID_PERMISSION, "인증에 실패했습니다.");
+        response.setStatus(e.getErrorCode().getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), Response.error(new ErrorResponse(e.getUserErrorCode().name(), e.toString())));
+        objectMapper.writeValue(response.getWriter(), Response.error(new ErrorResponse(e.getErrorCode(), e.toString())));
     }
 }
