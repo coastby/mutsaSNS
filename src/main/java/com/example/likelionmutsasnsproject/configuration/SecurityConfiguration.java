@@ -7,6 +7,7 @@ import com.example.likelionmutsasnsproject.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -37,7 +38,7 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/hello").permitAll()
 //                .antMatchers("/api/**").permitAll()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
-//                .antMatchers( HttpMethod.GET, "/api/v1/posts").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/posts").permitAll()
                 .antMatchers("/api/v1/posts").authenticated()
                 .anyRequest().hasRole("ADMIN")
 
