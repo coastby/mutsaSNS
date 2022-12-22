@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
 
-@Component
 //토큰 관련 예외 처리
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
