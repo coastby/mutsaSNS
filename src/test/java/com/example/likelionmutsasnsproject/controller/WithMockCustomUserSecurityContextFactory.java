@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.controller;
 
+import com.example.likelionmutsasnsproject.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -14,9 +15,9 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
         final SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 
         final UsernamePasswordAuthenticationToken authenticationToken
-                = new UsernamePasswordAuthenticationToken(annotation.userName(), "",
+                = new UsernamePasswordAuthenticationToken(annotation.userName(), null,
                 List.of(new SimpleGrantedAuthority(annotation.role())));
-        securityContext.setAuthentication((authenticationToken));
+        securityContext.setAuthentication(authenticationToken);
         return securityContext;
     }
 }
