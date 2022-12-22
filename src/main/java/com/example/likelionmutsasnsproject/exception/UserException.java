@@ -6,16 +6,16 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UserException extends RuntimeException{
-    private UserErrorCode userErrorCode;
+    private ErrorCode errorCode;
     private String message;
 
-    public UserException(UserErrorCode userErrorCode) {
-        this.userErrorCode = userErrorCode;
+    public UserException(ErrorCode errorCode) {
+        this.errorCode = errorCode;
     }
 
     @Override
     public String toString() {
-        if (message == null) return userErrorCode.getMessage();
-        return String.format("%s %s", userErrorCode.getMessage(), message);
+        if (message == null) return errorCode.getMessage();
+        return String.format("%s %s", errorCode.getMessage(), message);
     }
 }

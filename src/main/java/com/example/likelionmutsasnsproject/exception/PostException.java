@@ -6,16 +6,16 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PostException extends RuntimeException{
-    private PostErrorCode postErrorCode;
+    private ErrorCode errorCode;
     private String message;
 
-    public PostException(PostErrorCode postErrorCode) {
-        this.postErrorCode = postErrorCode;
+    public PostException(ErrorCode errorCode) {
+        this.errorCode = errorCode;
     }
 
     @Override
     public String toString() {
-        if (message == null) return postErrorCode.getMessage();
-        return String.format("%s %s", postErrorCode.getMessage(), message);
+        if (message == null) return errorCode.getMessage();
+        return String.format("%s %s", errorCode.getMessage(), message);
     }
 }
