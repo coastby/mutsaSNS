@@ -1,13 +1,14 @@
 package com.example.likelionmutsasnsproject.exception;
 
 import com.example.likelionmutsasnsproject.dto.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
-
+@Slf4j
 @RestControllerAdvice
 public class ExceptionManager {
     @ExceptionHandler(PostException.class)
@@ -26,9 +27,10 @@ public class ExceptionManager {
                 .body(Response.error(new ErrorResponse(ErrorCode.DATABASE_ERROR, e.getMessage())));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Response.error(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage())));
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e){
+//        log.error(e.getMessage());
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                .body(Response.error(new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, e.getMessage())));
+//    }
 }

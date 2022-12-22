@@ -6,6 +6,7 @@ import com.example.likelionmutsasnsproject.dto.PostAddRequest;
 import com.example.likelionmutsasnsproject.dto.PostListResponse;
 import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
+import com.example.likelionmutsasnsproject.exception.PostException;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.PostRepository;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
@@ -40,5 +41,10 @@ public class PostService {
     public Page<PostListResponse> getAll(Pageable pageable) {
         return postRepository.findAll(pageable)
                 .map(PostListResponse::from);
+    }
+    @Transactional
+    public PostListResponse getById(Integer id) {
+        Post post =  postRepository.findById(id).orElseThrow(()->new PostException(ErrorCode.POST_NOT_FOUND));
+        return PostListResponse.from(post);
     }
 }

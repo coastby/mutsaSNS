@@ -26,10 +26,14 @@ public class PostRestController {
     public ResponseEntity<Response<Page>> showListPage(
             @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         Page<PostListResponse> postResponses = postService.getAll(pageable);
-//        PostList response = new PostList(posts, pageable);
-        log.info(pageable.toString());
         return ResponseEntity.ok().body(Response.success(postResponses));
     }
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Response<PostListResponse>> showListPage(@PathVariable Integer id){
+        PostListResponse response = postService.getById(id);
+        return ResponseEntity.ok().body(Response.success(response));
+    }
+
     @PostMapping
     public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostAddRequest request, Authentication authentication){
         String userName = authentication.getPrincipal().toString();
