@@ -32,14 +32,20 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         //헤더 형식 확인
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")){
-            log.error("잘못된 헤더 형식 : {}", authorizationHeader);
+        if(authorizationHeader == null){
+            SecurityContextHolder.getContext().setAuthentication(null);
             filterChain.doFilter(request, response);
             return;
         }
-
         //token 분리
-        String token = authorizationHeader.trim().substring(7);
+        String token = "";
+        if (authorizationHeader.startsWith("Bearer ")){
+            token = authorizationHeader.replace("Bearer ", "");
+        } else{
+            log.error("Authorization 헤더 형식이 틀립니다. : {}", authorizationHeader);
+            filterChain.doFilter(request, response);
+            return;
+        }
         //token을 authentication 만들기
         Authentication authentication = jwtUtil.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
