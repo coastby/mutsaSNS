@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder encoder;
 
 
@@ -31,9 +30,6 @@ public class UserService {
 
         return UserJoinResponse.from(saved);
     }
-
-
-
     public User getUserByUserName(String userName){
 
         return userRepository.findByUserName(userName)

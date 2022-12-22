@@ -39,8 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         //token 분리
-        String token = null;
-        token = authorizationHeader.trim().substring(7);
+        String token = authorizationHeader.trim().substring(7);
         //token을 authentication 만들기
         Authentication authentication = jwtUtil.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
