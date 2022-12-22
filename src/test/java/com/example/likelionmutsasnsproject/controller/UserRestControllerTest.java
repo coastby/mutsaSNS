@@ -94,7 +94,7 @@ class UserRestControllerTest {
                                 .content(objectMapper.writeValueAsBytes(userLoginRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").value("token"))
+                .andExpect(jsonPath("$.result.jwt").value("token"))
                 .andDo(print());
         verify(userLoginService).login(userLoginRequest);
     }

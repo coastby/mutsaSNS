@@ -1,10 +1,6 @@
 package com.example.likelionmutsasnsproject.security;
 
-import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.exception.UserErrorCode;
-import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.util.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;

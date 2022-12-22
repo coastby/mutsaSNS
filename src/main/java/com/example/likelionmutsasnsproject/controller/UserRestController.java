@@ -28,9 +28,9 @@ public class UserRestController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request){
+    public ResponseEntity<Response<UserLoginResponse>> login(@RequestBody UserLoginRequest request){
         UserLoginResponse response = userLoginService.login(request);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().body(Response.success(response));
     }
     @GetMapping(value = "/exception")
     public ResponseEntity<?> userException(){
