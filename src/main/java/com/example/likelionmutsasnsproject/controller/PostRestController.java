@@ -1,6 +1,5 @@
 package com.example.likelionmutsasnsproject.controller;
 
-import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.dto.*;
 import com.example.likelionmutsasnsproject.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -29,17 +27,29 @@ public class PostRestController {
         return ResponseEntity.ok().body(Response.success(postResponses));
     }
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Response<PostListResponse>> showListPage(@PathVariable Integer id){
+    public ResponseEntity<Response<PostListResponse>> showPost(@PathVariable Integer id){
         PostListResponse response = postService.getById(id);
         return ResponseEntity.ok().body(Response.success(response));
     }
 
     @PostMapping
-    public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostAddRequest request, Authentication authentication){
+    public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostWorkRequest request, Authentication authentication){
         String userName = authentication.getPrincipal().toString();
-        log.info("userName: {}", userName);
         PostWorkResponse response = postService.add(request, userName);
         return ResponseEntity.created(URI.create("/api/v1/posts/"+response.getPostId()))
                 .body(Response.success(response));
+    }
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Response<PostWorkResponse>> delete(@PathVariable Integer id, Authentication authentication){
+        String userName = authentication.getPrincipal().toString();
+        PostWorkResponse response = postService.delete(id, userName);
+        return ResponseEntity.ok().body(Response.success(response));
+    }
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Response<PostWorkResponse>> edit
+            (@RequestBody PostWorkRequest request, @PathVariable Integer id, Authentication authentication){
+        String userName = authentication.getPrincipal().toString();
+        PostWorkResponse response = postService.update(id, request, userName);
+        return ResponseEntity.ok().body(Response.success(response));
     }
 }

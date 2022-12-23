@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ObjectMapper objectMapper = new ObjectMapper();
-        log.error("인증에 실패했습니다. : {}", authException);
+        log.error("인증에 실패했습니다. : {}", authException.getMessage());
         UserException e = new UserException(ErrorCode.INVALID_PERMISSION, authException.getMessage());
         response.setStatus(e.getErrorCode().getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

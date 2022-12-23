@@ -39,7 +39,7 @@ public class SecurityConfiguration {
 //                .antMatchers("/api/**").permitAll()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
-                .antMatchers("/api/v1/posts").authenticated()
+                .antMatchers("/api/v1/posts/**").authenticated()
                 .anyRequest().hasRole("ADMIN")
 
 //                .and()
