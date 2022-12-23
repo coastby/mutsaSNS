@@ -82,10 +82,8 @@ class PostRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result.content").exists())
                 .andExpect(jsonPath("$['result']['content'][0]['title']").exists())
-//                .andExpect(jsonPath("$.result.content.createdAt").exists())
+                .andExpect(jsonPath("$['result']['content'][0]['createdAt']").exists())
                 .andDo(print());
     }
-
-
 
 }
