@@ -23,6 +23,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -64,40 +65,7 @@ class PostRestControllerTest {
                 .andDo(print());
         verify(postService).add(postWorkRequest, "user");
     }
-    @Test
-    @DisplayName("포스트 작성 실패 - Bearer Token으로 보내지 않은 경우")
-    @WithMockCustomUser
-    void post_add_fail_토큰형식이상() throws Exception {
-        given(postService.add(postWorkRequest, "user")).willThrow(new UserException(ErrorCode.INVALID_PERMISSION));
 
-        mockMvc.perform(
-                        post("/api/v1/posts")
-                                .with(csrf())
-                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"))
-                .andExpect(jsonPath("$.result.message").value("사용자가 권한이 없습니다."))
-                .andDo(print());
-        verify(postService).add(postWorkRequest, "user");
-    }
-    @Test
-    @DisplayName("포스트 작성 실패 - Jwt토큰 이상")
-    @WithMockCustomUser
-    void post_add_fail_토큰유효하지않음() throws Exception {
-        given(postService.add(postWorkRequest, "user")).willThrow(new UserException(ErrorCode.INVALID_TOKEN));
-
-        mockMvc.perform(
-                        post("/api/v1/posts")
-                                .with(csrf())
-                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.result.errorCode").value("INVALID_TOKEN"))
-                .andExpect(jsonPath("$.result.message").value("잘못된 토큰입니다."))
-                .andDo(print());
-        verify(postService).add(postWorkRequest, "user");
-    }
 
     /**
      * 포스트 조회 테스트
