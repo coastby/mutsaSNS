@@ -50,7 +50,8 @@ public class PostService {
         return PostListResponse.from(post);
     }
 
-    //1) 포스트가 있는지 2) 유저가 있는지 3) 작성자와 유저가 동일한지 체크 후 user 반환
+    //1) 포스트가 있는지 2) 유저가 있는지 3) ADMIN이면 통과
+    //4) 작성자와 유저가 동일하면 user 반환
     public User passWithUserAndPost(Integer postId, String userName){
         //포스트가 없거나 삭제되었으면 예외 발생
         Post post =  postRepository.findById(postId)
@@ -62,6 +63,10 @@ public class PostService {
                 .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
         //로그인한 아이디와 게시글의 작성자가 다르면 권한없음 발생
+        if(user.getRole().name().equals("ADMIN")){
+            return user;
+        }
+
         if(!userName.equals(post.getUser().getUserName())){
             throw new UserException(ErrorCode.INVALID_PERMISSION);
         }

@@ -3,6 +3,9 @@ package com.example.likelionmutsasnsproject.controller;
 import com.example.likelionmutsasnsproject.dto.PostWorkRequest;
 import com.example.likelionmutsasnsproject.dto.PostListResponse;
 import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
+import com.example.likelionmutsasnsproject.exception.ErrorCode;
+import com.example.likelionmutsasnsproject.exception.PostException;
+import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -58,6 +61,40 @@ class PostRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.result.message").value("포스트 등록 완료"))
                 .andExpect(jsonPath("$.result.postId").value(0))
+                .andDo(print());
+        verify(postService).add(postWorkRequest, "user");
+    }
+    @Test
+    @DisplayName("포스트 작성 실패 - Bearer Token으로 보내지 않은 경우")
+    @WithMockCustomUser
+    void post_add_fail_토큰형식이상() throws Exception {
+        given(postService.add(postWorkRequest, "user")).willThrow(new UserException(ErrorCode.INVALID_PERMISSION));
+
+        mockMvc.perform(
+                        post("/api/v1/posts")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"))
+                .andExpect(jsonPath("$.result.message").value("사용자가 권한이 없습니다."))
+                .andDo(print());
+        verify(postService).add(postWorkRequest, "user");
+    }
+    @Test
+    @DisplayName("포스트 작성 실패 - Jwt토큰 이상")
+    @WithMockCustomUser
+    void post_add_fail_토큰유효하지않음() throws Exception {
+        given(postService.add(postWorkRequest, "user")).willThrow(new UserException(ErrorCode.INVALID_TOKEN));
+
+        mockMvc.perform(
+                        post("/api/v1/posts")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_TOKEN"))
+                .andExpect(jsonPath("$.result.message").value("잘못된 토큰입니다."))
                 .andDo(print());
         verify(postService).add(postWorkRequest, "user");
     }
