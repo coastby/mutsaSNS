@@ -90,5 +90,33 @@ class PostRestControllerTest {
                 .andExpect(jsonPath("$['result']['content'][0]['createdAt']").exists())
                 .andDo(print());
     }
+    /**
+     * 포스트 상세조회
+     * **/
+    @Test
+    @DisplayName("포스트 상세 조회 성공")
+    void show_post_success() throws Exception {
+        Integer postId = 1;
+        //가짜 결과값
+        PostListResponse response = PostListResponse.builder()
+                .id(postId)
+                .title("제목")
+                .body("내용")
+                .userName("작성자")
+                .createdAt("2022/12/25 16:28:42")
+                .lastModifiedAt("2022/12/25 16:28:42")
+                .build();
+
+        given(postService.getById(postId)).willReturn(response);
+
+        mockMvc.perform(get("/api/v1/posts/"+postId)
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.id").value(postId))
+                .andExpect(jsonPath("$['result']['title']").exists())
+                .andExpect(jsonPath("$['result']['body']").exists())
+                .andExpect(jsonPath("$['result']['userName']").exists())
+                .andDo(print());
+    }
 
 }
