@@ -27,6 +27,7 @@ class HelloRestControllerTest {
 
     @Test
     @DisplayName("good")
+    @WithMockCustomUser
     void good() throws Exception {
 
 

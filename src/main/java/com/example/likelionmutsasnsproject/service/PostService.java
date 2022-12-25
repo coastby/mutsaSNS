@@ -85,10 +85,10 @@ public class PostService {
     @Transactional
     public PostWorkResponse update(Integer postId, PostWorkRequest request, String userName){
         User user = passWithUserAndPost(postId, userName);
-        postRepository.save(request.toEntity(postId, user));
+        Post post = postRepository.save(request.toEntity(postId, user));
         return PostWorkResponse.builder()
                 .message("포스트 수정 완료")
-                .postId(postId)
+                .postId(post.getId())
                 .build();
     }
 }

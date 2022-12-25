@@ -109,4 +109,69 @@ class PostServiceTest {
         //then
         assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
     }
+    /**
+     * 포스트 수정 테스트
+     * **/
+    @Test
+    @DisplayName("수정 성공")
+    void edit_success(){
+        PostWorkRequest request = new PostWorkRequest(fixture.getTitle(), fixture.getBody());
+        Post mockPostEntity = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword(), false);
+        User mockUserEntity = UserEntityFixture.get("user", "password");
+
+        given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
+        given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
+        given(postRepository.save(any())).willReturn(mockPostEntity);
+        //when
+        PostWorkResponse response = postService.update(fixture.getPostId(), request, fixture.getUserName());
+        //then
+        assertDoesNotThrow(() -> postService.update(fixture.getPostId(), request, fixture.getUserName()));
+        assertEquals(response.getMessage(), "포스트 수정 완료");
+    }
+    @Test
+    @DisplayName("수정 실패 - 유저가 작성자가 아닐 떄")
+    void edit_fail_유저불일치(){
+        PostWorkRequest request = new PostWorkRequest(fixture.getTitle(), fixture.getBody());
+        Post mockPostEntity = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword(), false);
+        User mockUserEntity = UserEntityFixture.get("non_author", "password");
+
+        given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
+        given(userRepository.findByUserName("non_author")).willReturn(Optional.of(mockUserEntity));
+        given(postRepository.save(any())).willReturn(mockPostEntity);
+        //when
+        UserException e = assertThrows(UserException.class,
+                () -> {postService.update(fixture.getPostId(), request, "non_author");});
+        //then
+        assertEquals(ErrorCode.INVALID_PERMISSION, e.getErrorCode());
+    }
+    @Test
+    @DisplayName("수정 실패 - 유저가 존재하지 않음")
+    void edit_fail_유저없음(){
+        PostWorkRequest request = new PostWorkRequest(fixture.getTitle(), fixture.getBody());
+        Post mockPostEntity = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword(), false);
+
+        given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
+        given(userRepository.findByUserName("non")).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
+        given(postRepository.save(any())).willReturn(mockPostEntity);
+        //when
+        UserException e = assertThrows(UserException.class,
+                () -> {postService.update(fixture.getPostId(), request, "non");});
+        //then
+        assertEquals(ErrorCode.USERNAME_NOT_FOUND, e.getErrorCode());
+    }
+    @Test
+    @DisplayName("수정 실패 - 포스트가 존재하지 않음")
+    void edit_fail_포스트없음(){
+        PostWorkRequest request = new PostWorkRequest(fixture.getTitle(), fixture.getBody());
+        User mockUserEntity = UserEntityFixture.get("user", "password");
+
+
+        given(postRepository.findById(fixture.getPostId())).willThrow(new PostException(ErrorCode.POST_NOT_FOUND));
+        given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
+        //when
+        PostException e = assertThrows(PostException.class,
+                () -> {postService.update(fixture.getPostId(), request, "user");});
+        //then
+        assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
+    }
 }
