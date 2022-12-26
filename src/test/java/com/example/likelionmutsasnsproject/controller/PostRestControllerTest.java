@@ -206,14 +206,78 @@ class PostRestControllerTest {
         verify(postService).update(postId, postWorkRequest,"user");
     }
     @Test
-    @DisplayName("포스트 작성 실패 - 인증실패")
+    @DisplayName("포스트 수정 실패 - 인증실패")
     @WithAnonymousUser
     void post_edit_fail_인증실패() throws Exception {
         mockMvc.perform(
-                        put("/api/v1/posts")
+                        put("/api/v1/posts/"+0)
                                 .with(csrf())
                                 .content(objectMapper.writeValueAsBytes(postWorkRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+    /**
+     * 포스트 삭제
+     * **/
+    @Test
+    @DisplayName("포스트 삭제 성공")
+    @WithMockCustomUser
+    void post_delete_success() throws Exception {
+        Integer postId = 0;
+        given(postService.delete(postId,"user")).willReturn(new PostWorkResponse("포스트 삭제 완료", postId));
+
+        mockMvc.perform(
+                        delete("/api/v1/posts/"+postId)
+                                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.message").value("포스트 삭제 완료"))
+                .andExpect(jsonPath("$.result.postId").value(0))
+                .andDo(print());
+        verify(postService).delete(postId,"user");
+    }
+    @Test
+    @DisplayName("포스트 삭제 실패 - 작성자 불일치")
+    @WithMockCustomUser
+    void post_delete_fail_작성자불일치() throws Exception {
+        Integer postId = 0;
+        given(postService.delete(postId,"user")).willThrow(new UserException(ErrorCode.INVALID_PERMISSION));
+
+        mockMvc.perform(
+                        delete("/api/v1/posts/"+postId)
+                                .with(csrf()))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"))
+                .andExpect(jsonPath("$.result.message").value("사용자가 권한이 없습니다."))
+                .andDo(print());
+        verify(postService).delete(postId,"user");
+    }
+    @Test
+    @DisplayName("포스트 삭제 실패 - DB에러")
+    @WithMockCustomUser
+    void post_delete_fail_DB에러() throws Exception {
+        Integer postId = 0;
+        given(postService.delete(postId, "user")).willThrow(new PostException(ErrorCode.DATABASE_ERROR));
+
+        mockMvc.perform(
+                        delete("/api/v1/posts/"+postId)
+                                .with(csrf()))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("DATABASE_ERROR"))
+                .andExpect(jsonPath("$.result.message").value("DB에러"))
+                .andDo(print());
+        verify(postService).delete(postId,"user");
+    }
+    @Test
+    @DisplayName("포스트 삭제 실패 - 인증실패")
+    @WithAnonymousUser
+    void post_delete_fail_인증실패() throws Exception {
+        mockMvc.perform(
+                        delete("/api/v1/posts/"+0)
+                                .with(csrf()))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
