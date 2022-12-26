@@ -27,7 +27,8 @@ public class PostService {
     @Transactional
     public PostWorkResponse add(PostWorkRequest request, String userName){
         //유저가 존재하지 않을 때 등록 실패 -> USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"Not founded")
-        User user = userRepository.findByUserName(userName).orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, "작성할 수 없는 사용자입니다."));
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, "작성할 수 없는 사용자입니다."));
 
         //포스트 등록
         Post saved = postRepository.save(request.toEntity(user));
@@ -62,13 +63,13 @@ public class PostService {
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
-        //로그인한 아이디와 게시글의 작성자가 다르면 권한없음 발생
+        //ADMIN 사용자는 사용 가능
         if(user.getRole().name().equals("ADMIN")){
             return user;
         }
-
+        //로그인한 아이디와 게시글의 작성자가 다르면 권한없음 발생
         if(!userName.equals(post.getUser().getUserName())){
-            throw new UserException(ErrorCode.INVALID_PERMISSION);
+            throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 포스트만 수정/삭제할 수 있습니다.");
         }
         return user;
     }

@@ -54,6 +54,9 @@ public class JwtUtil {
     public Claims extractClaims(String token){
         try{
             return Jwts.parserBuilder().setSigningKey(makeKey()).build().parseClaimsJws(token).getBody();
+        } catch (SignatureException e) {
+            log.error("서명이 잘못된 토큰입니다. : {}", token);
+            throw new UserException(ErrorCode.INVALID_TOKEN, "서명이 잘못된 토큰입니다.");
         } catch(ExpiredJwtException e){
             log.error("만료된 토큰입니다. : {}", token);
             throw new UserException(ErrorCode.INVALID_TOKEN, "만료된 토큰입니다.");
@@ -68,7 +71,12 @@ public class JwtUtil {
     //token으로 authentication 꺼내는 메서드
     public UsernamePasswordAuthenticationToken getAuthentication(String token){
         String userName = extractClaims(token).get("userName", String.class);
-        User user = userService.getUserByUserName(userName);
+        User user;
+        try{
+            user = userService.getUserByUserName(userName);
+        } catch (UserException e){
+            throw new UserException(e.getErrorCode(), "유효하지 않은 아이디입니다.");
+        }
         return new UsernamePasswordAuthenticationToken(user.getUserName(), null,
                 List.of(new SimpleGrantedAuthority(user.getRole().name())));
     }
