@@ -12,7 +12,7 @@ public class HelloRestController {
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok().body("happy_new_year");
     }
-    @GetMapping(value = "/good")
+    @GetMapping(value = "/auth-test-api")
     public ResponseEntity<String> sayGood() {
         return ResponseEntity.ok().body("good");
     }

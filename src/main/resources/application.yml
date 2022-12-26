@@ -13,8 +13,6 @@ spring:
     url: localhost
     username: root
     password: 1q2w3e4r
-  profiles:
-    active: test
 
 #Encoding
 server:

@@ -40,7 +40,6 @@ class PostRestControllerTest {
     private MockMvc mockMvc;
     PostWorkRequest postWorkRequest = new PostWorkRequest("merry", "christmas");
     Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "createdAt");
-    String token = "eyJhbGciOiJIUzM4NCJ9.eyJ1c2VyTmFtZSI6InN0cmluZyIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNjcyMDA3MzU1LCJleHAiOjE2NzIwMTA5NTV9.xa26hJWQ1pEgU4Nx9SIlqWUy11mmeqaWGCqF5bJniCRtRUTiSZMyLGvIz-CAPtOQ";
 
     /**
      * 포스트 작성 테스트
