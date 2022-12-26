@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.configuration;
 
+import com.example.likelionmutsasnsproject.security.CustomAccessDeniedHandler;
 import com.example.likelionmutsasnsproject.security.CustomAuthenticationEntryPoint;
 import com.example.likelionmutsasnsproject.security.JwtExceptionFilter;
 import com.example.likelionmutsasnsproject.security.JwtFilter;
@@ -38,12 +39,11 @@ public class SecurityConfiguration {
                 .antMatchers("/api/v1/hello").permitAll()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
-                .antMatchers("/api/v1/posts/**").authenticated()
-                .antMatchers("/api/v1/auth-test-api").authenticated()
                 .anyRequest().hasRole("ADMIN")
+                .anyRequest().authenticated()
 
-//                .and()
-//                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and()

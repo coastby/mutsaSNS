@@ -1,4 +1,4 @@
-package com.example.likelionmutsasnsproject.controller;
+package com.example.likelionmutsasnsproject.annotation;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

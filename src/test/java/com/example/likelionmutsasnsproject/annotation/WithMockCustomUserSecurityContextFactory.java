@@ -1,6 +1,5 @@
-package com.example.likelionmutsasnsproject.controller;
+package com.example.likelionmutsasnsproject.annotation;
 
-import com.example.likelionmutsasnsproject.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

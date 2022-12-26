@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.controller;
 
+import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
 import com.example.likelionmutsasnsproject.dto.PostWorkRequest;
 import com.example.likelionmutsasnsproject.dto.PostListResponse;
 import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
@@ -15,11 +16,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,6 +52,7 @@ class PostRestControllerTest {
     @WithMockCustomUser
     void post_add_success() throws Exception {
         given(postService.add(postWorkRequest, "user")).willReturn(new PostWorkResponse("포스트 등록 완료", 0));
+        given(postService.add(any(), any())).willReturn(new PostWorkResponse("포스트 등록 완료", 0));
 
         mockMvc.perform(
                 post("/api/v1/posts")
@@ -61,6 +65,38 @@ class PostRestControllerTest {
                 .andDo(print());
         verify(postService).add(postWorkRequest, "user");
     }
+    @Test
+    @DisplayName("포스트 작성 성공 - @WithMockUser 사용")
+    void post_add_success2() throws Exception {
+        given(postService.add(any(), any())).willReturn(new PostWorkResponse("포스트 등록 완료", 0));
+
+        mockMvc.perform(
+                        post("/api/v1/posts")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.result.message").value("포스트 등록 완료"))
+                .andExpect(jsonPath("$.result.postId").value(0))
+                .andDo(print());
+    }
+    @Test
+    @DisplayName("포스트 작성 실패 - 유효하지 않은 토큰")
+    @WithAnonymousUser
+    void post_add_fail() throws Exception {
+        given(postService.add(any(), any())).willThrow(new UserException(ErrorCode.INVALID_PERMISSION));
+
+
+        mockMvc.perform(
+                        post("/api/v1/posts")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+
     /**
      * 포스트 조회 테스트
      * **/
