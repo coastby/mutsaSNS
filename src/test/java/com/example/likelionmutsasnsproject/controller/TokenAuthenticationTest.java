@@ -63,8 +63,6 @@ public class TokenAuthenticationTest {
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .compact();
     }
-
-
     private String token = generateToken_1hour("string", UserRole.USER);
 
     @Test
@@ -81,7 +79,7 @@ public class TokenAuthenticationTest {
     }
     @Test
     @Transactional
-    @DisplayName("jwt 인증 실패 - 헤더형식이상")
+    @DisplayName("jwt 인증 실패 - 헤더형식이상") // Bearer가 없을 때
     void authenticatedUser_헤더형식이상() throws Exception {
         mockMvc.perform(
                     get("/api/v1/auth-test-api")

@@ -81,12 +81,9 @@ class PostRestControllerTest {
                 .andDo(print());
     }
     @Test
-    @DisplayName("포스트 작성 실패 - 유효하지 않은 토큰")
+    @DisplayName("포스트 작성 실패 - 인증실패")
     @WithAnonymousUser
     void post_add_fail() throws Exception {
-        given(postService.add(any(), any())).willThrow(new UserException(ErrorCode.INVALID_PERMISSION));
-
-
         mockMvc.perform(
                         post("/api/v1/posts")
                                 .with(csrf())
@@ -207,6 +204,18 @@ class PostRestControllerTest {
                 .andExpect(jsonPath("$.result.message").value("DB에러"))
                 .andDo(print());
         verify(postService).update(postId, postWorkRequest,"user");
+    }
+    @Test
+    @DisplayName("포스트 작성 실패 - 인증실패")
+    @WithAnonymousUser
+    void post_edit_fail_인증실패() throws Exception {
+        mockMvc.perform(
+                        put("/api/v1/posts")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
     }
 
 }

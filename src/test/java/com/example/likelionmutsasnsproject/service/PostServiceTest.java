@@ -19,11 +19,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.mock;
 
 class PostServiceTest {
@@ -123,9 +125,8 @@ class PostServiceTest {
         given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
         given(postRepository.save(any())).willReturn(mockPostEntity);
         //when
-        PostWorkResponse response = postService.update(fixture.getPostId(), request, fixture.getUserName());
+        PostWorkResponse response = assertDoesNotThrow(() -> postService.update(fixture.getPostId(), request, fixture.getUserName()));
         //then
-        assertDoesNotThrow(() -> postService.update(fixture.getPostId(), request, fixture.getUserName()));
         assertEquals(response.getMessage(), "포스트 수정 완료");
     }
     @Test
@@ -171,6 +172,68 @@ class PostServiceTest {
         //when
         PostException e = assertThrows(PostException.class,
                 () -> {postService.update(fixture.getPostId(), request, "user");});
+        //then
+        assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
+    }
+    /**
+     * 포스트 삭제 테스트
+     * **/
+    @Test
+    @DisplayName("삭제 성공")
+    void delete_success(){
+        Post mockPostEntity = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword(), false);
+        User mockUserEntity = UserEntityFixture.get("user", "password");
+
+        given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
+        given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
+        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+        //when
+        PostWorkResponse response = assertDoesNotThrow(() -> postService.delete(fixture.getPostId(), fixture.getUserName()));
+        //then
+        assertEquals(response.getMessage(), "포스트 삭제 완료");
+    }
+    @Test
+    @DisplayName("삭제 실패 - 유저가 작성자가 아닐 떄")
+    void delete_fail_유저불일치(){
+        Post mockPostEntity = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword(), false);
+        User mockUserEntity = UserEntityFixture.get("non_author", "password");
+
+        given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
+        given(userRepository.findByUserName("non_author")).willReturn(Optional.of(mockUserEntity));
+        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+
+        //when
+        UserException e = assertThrows(UserException.class,
+                () -> {postService.delete(fixture.getPostId(), "non_author");});
+        //then
+        assertEquals(ErrorCode.INVALID_PERMISSION, e.getErrorCode());
+    }
+    @Test
+    @DisplayName("삭제 실패 - 유저가 존재하지 않음")
+    void delete_fail_유저없음(){
+        Post mockPostEntity = PostEntityFixture.get(fixture.getUserName(), fixture.getPassword(), false);
+
+        given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
+        given(userRepository.findByUserName("non")).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
+        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+
+        //when
+        UserException e = assertThrows(UserException.class,
+                () -> {postService.delete(fixture.getPostId(), "non");});
+        //then
+        assertEquals(ErrorCode.USERNAME_NOT_FOUND, e.getErrorCode());
+    }
+    @Test
+    @DisplayName("삭제 실패 - 포스트가 존재하지 않음")
+    void delete_fail_포스트없음(){
+        User mockUserEntity = UserEntityFixture.get("user", "password");
+
+        given(postRepository.findById(fixture.getPostId())).willThrow(new PostException(ErrorCode.POST_NOT_FOUND));
+        given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
+        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+        //when
+        PostException e = assertThrows(PostException.class,
+                () -> {postService.delete(fixture.getPostId(), "user");});
         //then
         assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
     }
