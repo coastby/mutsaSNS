@@ -1,9 +1,9 @@
 spring:
-  #swagger ??
+  #swagger
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  #jpa ??
+  #jpa
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,14 +13,16 @@ spring:
     url: localhost
     username: root
     password: 1q2w3e4r
+  profiles:
+    active: test
 
-#???
+#Encoding
 server:
   servlet:
     encoding:
       force-response: true
 
-#token ? ??
+#JWT token
 jwt:
   token:
     secret: key

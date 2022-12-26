@@ -1,0 +1,20 @@
+spring:
+  sql:
+    init:
+      mode: always
+#      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: localhost
+    username: root
+    password: password
+
+jwt:
+  token:
+    secret: key
