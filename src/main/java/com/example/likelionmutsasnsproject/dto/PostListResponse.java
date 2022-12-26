@@ -28,5 +28,4 @@ public class PostListResponse {
                 .lastModifiedAt(dateFormat.format(post.getUpdatedAt()))
                 .build();
     }
-
 }
