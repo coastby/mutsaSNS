@@ -1,6 +1,7 @@
 package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.User;
+import com.example.likelionmutsasnsproject.dto.UserJoinResponse;
 import com.example.likelionmutsasnsproject.dto.UserLoginRequest;
 import com.example.likelionmutsasnsproject.dto.UserLoginResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;

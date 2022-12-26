@@ -1,5 +1,5 @@
 package com.example.likelionmutsasnsproject.dto;
 
 public enum UserRole {
-    ADMIN, USER;
+    ROLE_ADMIN, ROLE_USER;
 }

@@ -64,7 +64,7 @@ public class PostService {
                 .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
         //ADMIN 사용자는 사용 가능
-        if(user.getRole().name().equals("ADMIN")){
+        if(user.getRole().name().equals("ROLE_ADMIN")){
             return user;
         }
         //로그인한 아이디와 게시글의 작성자가 다르면 권한없음 발생
