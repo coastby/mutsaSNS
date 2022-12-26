@@ -14,7 +14,8 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "사용자가 권한이 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 포스트가 없습니다."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB에러"),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러"),
+    INVALID_VALUE(HttpStatus.BAD_REQUEST, "입력값을 잘못되었습니다.");
 
     private HttpStatus status;
     private String message;

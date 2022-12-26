@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -49,10 +50,11 @@ public class UserRestController {
     }
     @Operation(summary = "권한변경", description = "ADMIN <-> USER")
     @PostMapping(value = "/{id}/role/change")
-    public ResponseEntity<Response<UserRoleResponse>> changeRole(@ApiParam(
-            value = "userId", required = true, example = "1") @PathVariable Integer id,
-                                                                 @RequestBody UserRoleRequest request){
-        UserRoleResponse response = userService.changeRole(id, request.getRole());
+    public ResponseEntity<Response<UserRoleResponse>> changeRole
+            (@ApiParam(value = "userId", required = true, example = "1") @PathVariable Integer id,
+                 @RequestBody UserRoleRequest request, @ApiIgnore Authentication authentication){
+        String userName = authentication.getPrincipal().toString();
+        UserRoleResponse response = userService.changeRole(id, request.getRole(), userName);
         return ResponseEntity.ok().body(Response.success(response));
     }
 }
