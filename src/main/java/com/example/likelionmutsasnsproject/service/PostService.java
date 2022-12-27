@@ -45,39 +45,37 @@ public class PostService {
     }
     @Transactional
     public PostListResponse getById(Integer id) {
-        Post post =  postRepository.findById(id)
-                .filter(x -> (!x.isDeleted()))
-                .orElseThrow(()->new PostException(ErrorCode.POST_NOT_FOUND));
+        Post post = getPostByPostId(id);
         return PostListResponse.from(post);
     }
-
-    //1) 포스트가 있는지 2) 유저가 있는지 3) ADMIN이면 통과
-    //4) 작성자와 유저가 동일하면 user 반환
-    public User passWithUserAndPost(Integer postId, String userName){
+    public Post getPostByPostId(Integer postId){
         //포스트가 없거나 삭제되었으면 예외 발생
-        Post post =  postRepository.findById(postId)
+        return postRepository.findById(postId)
                 .filter(x -> (!x.isDeleted()))
                 .orElseThrow(()->new PostException(ErrorCode.POST_NOT_FOUND));
-
+    }
+    // 1) user가 존재하고 2) ADMIN이면 3) 작성자와 유저가 동일하면 true 반환
+    public boolean validateUserToPost(Post post, String userName){
         //유저가 존재하지 않을 때 등록 실패 -> USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"Not founded")
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
         //ADMIN 사용자는 사용 가능
         if(user.getRole().name().equals("ROLE_ADMIN")){
-            return user;
+            return true;
         }
-        //로그인한 아이디와 게시글의 작성자가 다르면 권한없음 발생
-        if(!userName.equals(post.getUser().getUserName())){
-            throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 포스트만 수정/삭제할 수 있습니다.");
-        }
-        return user;
+        //로그인한 아이디와 게시글의 작성자가 다르면 권한없음
+        return userName.equals(post.getUser().getUserName());
     }
+    //1) 포스트가 있는지 2) 유저가 권한이 있는지
     @Transactional
     public PostWorkResponse delete(Integer postId, String userName) {
-        User user = passWithUserAndPost(postId, userName);
+        Post post = getPostByPostId(postId);
+        if (!validateUserToPost(post, userName)){   //권한이 없으면 예외발생
+            throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 포스트만 수정/삭제할 수 있습니다.");
+        }
         //쿼리로 isDeleted->true, deletedAt->현재시간 으로 변경
-        postRepository.deletePostById(postId, new Timestamp(System.currentTimeMillis()));
+        postRepository.deletePostById(post.getId(), new Timestamp(System.currentTimeMillis()));
         return PostWorkResponse.builder()
                 .message("포스트 삭제 완료")
                 .postId(postId)
@@ -85,11 +83,14 @@ public class PostService {
     }
     @Transactional
     public PostWorkResponse update(Integer postId, PostWorkRequest request, String userName){
-        User user = passWithUserAndPost(postId, userName);
-        Post post = postRepository.save(request.toEntity(postId, user));
+        Post post = getPostByPostId(postId);
+        if (!validateUserToPost(post, userName)){   //권한이 없으면 예외발생
+            throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 포스트만 수정/삭제할 수 있습니다.");
+        }
+        Post saved = postRepository.save(request.editEntity(post));
         return PostWorkResponse.builder()
                 .message("포스트 수정 완료")
-                .postId(post.getId())
+                .postId(saved.getId())
                 .build();
     }
 }

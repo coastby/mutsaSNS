@@ -20,12 +20,12 @@ public class PostWorkRequest {
                 .isDeleted(false)
                 .build();
     }
-    public Post toEntity(Integer postId, User user){
+    public Post editEntity(Post post) {
         return Post.builder()
-                .id(postId)
+                .id(post.getId())
                 .title(this.getTitle())
                 .body(this.getBody())
-                .user(user)
+                .user(post.getUser())
                 .isDeleted(false)
                 .build();
     }
