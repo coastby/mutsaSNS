@@ -7,7 +7,7 @@
 
 
 ---
-![img.png](img.png)
+![img_2.png](img_2.png)
 ![img_1.png](img_1.png)
 
 - [x] [요구사항정의서 작성](https://gaudy-vein-afc.notion.site/caaa1915dc2b4715bf7310ab01c636f2)
@@ -19,7 +19,7 @@
 
 #### 👉 DB
 - [x] [DB 설계](https://gaudy-vein-afc.notion.site/DB-abf6dc6e5d2b43dcb3174cc459a95af0)
-- [x] MySql 구축
+- [x] [MySql 구축](https://velog.io/@coastby/AWS-Docker-aws-ec2-instance%EC%97%90-docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0)
 
 #### 👉 프로젝트 설정
 - [x] [entity 생성](https://gaudy-vein-afc.notion.site/entity-b93c520ad9564eeba3a03f3ec58a658b)
@@ -30,10 +30,10 @@
 ##### 회원
 - [x] [회원 가입](https://gaudy-vein-afc.notion.site/36bcc1fbd6b5482a8a900d1f2adc2417) / [테스트코드](https://gaudy-vein-afc.notion.site/f822f9aa85e444909ef9004bfbf50401)
 - [x] [로그인](https://gaudy-vein-afc.notion.site/8da836987de745dc95e41af3fafe9aa7) / [테스트코드](https://gaudy-vein-afc.notion.site/8facd4f4e42a4e35a3d5e8c782946292)
-- [x] [권한변경](https://gaudy-vein-afc.notion.site/ADMIN-73b969019ea344e78d0f21de600381e6)
+- [x] [권한변경](https://gaudy-vein-afc.notion.site/ADMIN-73b969019ea344e78d0f21de600381e6) / [테스트코드](https://gaudy-vein-afc.notion.site/ADMIN-89fef5e6d2b44ab6bf41700e18bbf6bd)
 
 ##### 포스트
-- [x] [포스트 리스트 조회](https://gaudy-vein-afc.notion.site/a2aa0f0f7e554e779da5f0abaa2dfdf2) / 테스트코드
+- [x] [포스트 리스트 조회](https://gaudy-vein-afc.notion.site/a2aa0f0f7e554e779da5f0abaa2dfdf2) / [테스트코드](https://gaudy-vein-afc.notion.site/d5c778e291504912b496442c5830c4cd)
 - [x] [포스트 작성](https://gaudy-vein-afc.notion.site/f7f9d98d8b114e4d8343c1bbdc100916) / [테스트코드](https://gaudy-vein-afc.notion.site/15ad2c245bba46b7a49d5eff63487af9)
 - [x] [포스트 수정/삭제](https://gaudy-vein-afc.notion.site/ec91f4f5fe0c47b69c1820dbbd5ba947) / [테스트코드](https://gaudy-vein-afc.notion.site/fac2f76f2468463d8ea83e2c84bd1be3)
 - [x] [포스트 상세 조회](https://gaudy-vein-afc.notion.site/235378165a0e42fd941893de7f1bd0cc) / [테스트코드](https://gaudy-vein-afc.notion.site/a965e3052b934275a6b8beae90178058)
@@ -54,18 +54,18 @@
 
 [📎 노션 프로젝트 페이지](https://www.notion.so/0111dd15420243a19ed94263bc07932d)
 
-- 프로젝트 설계
-  - GitLab, Docker, EC2를 이용한 CI/CD 구현
-  - DB 설계 및 ERD 작성
 
-- ecurity
-  - Jwt를 이용한 인증 구현
+- GitLab, Docker, EC2를 이용한 <u>CI/CD 구현</u>
+- DB 설계 및 ERD 작성
+
+- Security
+  - <u>Jwt</u>를 이용한 인증 구현
   - FilterChain 상의 예외 처리
   - URI별로 인증, 권한 설정
 
 - Test Code
   - Security를 포함하는 테스트코드 작성
-  - CustomMockUser를 이용하여 athentication 자체제작
+  - CustomMockUser를 이용하여 athentication 커스텀
   - JwtFilter 자체를 테스트하기 위한 코드 작성
   - 테스트코드 관련 annotation 활용
   - MockMvc를 이용한 테스트 코드 구현
