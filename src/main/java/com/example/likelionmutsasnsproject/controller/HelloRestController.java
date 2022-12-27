@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloRestController {
     @GetMapping(value = "/hello")
     public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok().body("happy_new_year");
+        return ResponseEntity.ok().body("조예지");
     }
     @GetMapping(value = "/auth-test-api")
     public ResponseEntity<String> sayGood() {
