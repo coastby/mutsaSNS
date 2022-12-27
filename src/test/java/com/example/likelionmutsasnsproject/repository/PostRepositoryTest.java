@@ -28,7 +28,7 @@ class PostRepositoryTest {
         Post post = postRepository.findById(1).orElse(null);
 
         assertTrue(post.isDeleted());
-        assertEquals(post.getDeletedAt(), now);
-        assertEquals(post.getId(), 1);
+        assertEquals(now, post.getDeletedAt());
+        assertEquals(1, post.getId());
     }
 }

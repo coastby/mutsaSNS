@@ -9,7 +9,16 @@ public class UserEntityFixture {
                 .id(1)
                 .userName(userName)
                 .password(password)
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
+                .build();
+
+    }
+    public static User getADMIN(String userName, String password){
+        return User.builder()
+                .id(1)
+                .userName(userName)
+                .password(password)
+                .role(UserRole.ROLE_ADMIN)
                 .build();
 
     }

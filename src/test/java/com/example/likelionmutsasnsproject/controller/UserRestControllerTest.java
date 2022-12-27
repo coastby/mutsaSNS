@@ -1,13 +1,12 @@
 package com.example.likelionmutsasnsproject.controller;
 
-import com.example.likelionmutsasnsproject.dto.UserJoinRequest;
-import com.example.likelionmutsasnsproject.dto.UserJoinResponse;
-import com.example.likelionmutsasnsproject.dto.UserLoginRequest;
-import com.example.likelionmutsasnsproject.dto.UserLoginResponse;
+import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
+import com.example.likelionmutsasnsproject.dto.*;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -130,5 +129,29 @@ class UserRestControllerTest {
                 .andExpect(jsonPath("$.result.message").value("패스워드가 잘못되었습니다."))
                 .andDo(print());
         verify(userLoginService).login(userLoginRequest);
+    }
+    /**
+     * 권한 변경
+     * **/
+    @Test
+    @DisplayName("권한 변경 성공")
+    @WithMockCustomUser(role = "ROLE_ADMIN")
+    void change_role_success() throws Exception {
+        Integer userId = 1;
+        String role = "ADMIN";
+        UserRoleRequest request = new UserRoleRequest(role);
+        UserRoleResponse response = new UserRoleResponse(role+"(으)로 변경되었습니다.", "user");
+
+        given(userService.changeRole(userId, role, "user")).willReturn(response);
+
+        mockMvc.perform(
+                post("/api/v1/users/"+userId+"/role/change")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(request))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.message").value(role+"(으)로 변경되었습니다."))
+                .andExpect(jsonPath("$.result.userName").value("user"))
+                .andDo(print());
     }
 }

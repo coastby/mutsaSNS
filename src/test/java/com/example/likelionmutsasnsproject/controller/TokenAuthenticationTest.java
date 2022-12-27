@@ -63,7 +63,7 @@ public class TokenAuthenticationTest {
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .compact();
     }
-    private String token = generateToken_1hour("string", UserRole.ROLE_USER);
+    private String token = generateToken_1hour("user", UserRole.ROLE_USER);
 
     @Test
     @Transactional
@@ -95,7 +95,7 @@ public class TokenAuthenticationTest {
     @DisplayName("jwt 인증 실패 - 유효하지않은jwt")
     void authenticatedUser_유효하지않은jwt() throws Exception {
         //1초만에 만료되는 토큰
-        String token1msec = generateToken_1msec("string", UserRole.ROLE_USER);
+        String token1msec = generateToken_1msec("user", UserRole.ROLE_USER);
 
         mockMvc.perform(
                         get("/api/v1/auth-test-api")
