@@ -2,7 +2,7 @@ package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
 import com.example.likelionmutsasnsproject.dto.PostWorkRequest;
-import com.example.likelionmutsasnsproject.dto.PostListResponse;
+import com.example.likelionmutsasnsproject.dto.PostResponse;
 import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.PostException;
@@ -101,11 +101,11 @@ class PostRestControllerTest {
     @DisplayName("포스트 리스트 조회 성공")
     void show_post_list_success() throws Exception {
         //가짜 결과값
-        List<PostListResponse> postList = List.of(PostListResponse.builder()
+        List<PostResponse> postList = List.of(PostResponse.builder()
                         .title("제목")
                         .createdAt("날짜")
                         .build());
-        Page<PostListResponse> response = new PageImpl<>(postList);
+        Page<PostResponse> response = new PageImpl<>(postList);
 
         given(postService.getAll(pageable)).willReturn(response);
 
@@ -125,7 +125,7 @@ class PostRestControllerTest {
     void show_post_success() throws Exception {
         Integer postId = 1;
         //가짜 결과값
-        PostListResponse response = PostListResponse.builder()
+        PostResponse response = PostResponse.builder()
                 .id(postId)
                 .title("제목")
                 .body("내용")

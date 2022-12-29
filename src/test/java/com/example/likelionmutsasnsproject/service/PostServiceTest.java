@@ -2,7 +2,7 @@ package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.PostListResponse;
+import com.example.likelionmutsasnsproject.dto.PostResponse;
 import com.example.likelionmutsasnsproject.dto.PostWorkRequest;
 import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
@@ -13,11 +13,9 @@ import com.example.likelionmutsasnsproject.fixture.TestInfoFixture;
 import com.example.likelionmutsasnsproject.fixture.UserEntityFixture;
 import com.example.likelionmutsasnsproject.repository.PostRepository;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -81,7 +79,7 @@ class PostServiceTest {
 
         given(postRepository.findById(postId)).willReturn(Optional.of(mockPostEntity));
         //when
-        PostListResponse response = postService.getById(postId);
+        PostResponse response = postService.getById(postId);
         //then
         assertEquals(postId, response.getId());
         assertEquals(fixture.getUserName(), response.getUserName());

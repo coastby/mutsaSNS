@@ -3,7 +3,7 @@ package com.example.likelionmutsasnsproject.service;
 import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.PostWorkRequest;
-import com.example.likelionmutsasnsproject.dto.PostListResponse;
+import com.example.likelionmutsasnsproject.dto.PostResponse;
 import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.PostException;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -39,14 +38,14 @@ public class PostService {
                 .build();
     }
     @Transactional
-    public Page<PostListResponse> getAll(Pageable pageable) {
+    public Page<PostResponse> getAll(Pageable pageable) {
         return postRepository.findByisDeletedFalse(pageable)
-                .map(PostListResponse::from);
+                .map(PostResponse::from);
     }
     @Transactional
-    public PostListResponse getById(Integer id) {
+    public PostResponse getById(Integer id) {
         Post post = getPostByPostId(id);
-        return PostListResponse.from(post);
+        return PostResponse.from(post);
     }
     public Post getPostByPostId(Integer postId){
         //포스트가 없거나 삭제되었으면 예외 발생

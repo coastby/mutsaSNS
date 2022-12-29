@@ -36,14 +36,14 @@ public class PostRestController {
     @GetMapping
     public ResponseEntity<Response<Page>> showListPage(
             @ApiIgnore @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
-        Page<PostListResponse> postResponses = postService.getAll(pageable);
+        Page<PostResponse> postResponses = postService.getAll(pageable);
         return ResponseEntity.ok().body(Response.success(postResponses));
     }
     @Operation(summary = "단일 포스트 조회")
     @ApiImplicitParam(name = "id", value = "포스트 ID")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Response<PostListResponse>> showPost(@PathVariable Integer id){
-        PostListResponse response = postService.getById(id);
+    public ResponseEntity<Response<PostResponse>> showPost(@PathVariable Integer id){
+        PostResponse response = postService.getById(id);
         return ResponseEntity.ok().body(Response.success(response));
     }
 
