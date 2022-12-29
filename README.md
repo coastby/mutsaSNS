@@ -7,6 +7,16 @@
 
 
 ---
+#### 프로젝트 기술스택
+- 에디터 : Intellij Ultimate
+- 개발 툴 : SpringBoot 2.7.6
+- 자바 : JAVA 11
+- 빌드 : Gradle 6.8
+- 서버 : AWS EC2
+- 배포 : Docker
+- 데이터베이스 : MySql 8.0
+- 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security, JWT, Swagger
+
 ![img_2.png](img_2.png)
 ![img_1.png](img_1.png)
 
@@ -57,6 +67,7 @@
 
 - GitLab, Docker, EC2를 이용한 <u>CI/CD 구현</u>
 - DB 설계 및 ERD 작성
+- 포스트 논리삭제 (soft delete) 구현
 
 - Security
   - <u>Jwt</u>를 이용한 인증 구현
@@ -65,7 +76,7 @@
 
 - Test Code
   - Security를 포함하는 테스트코드 작성
-  - CustomMockUser를 이용하여 athentication 커스텀
+  - @WithMockCustomUser를 이용하여 authentication 커스텀
   - JwtFilter 자체를 테스트하기 위한 코드 작성
   - 테스트코드 관련 annotation 활용
   - MockMvc를 이용한 테스트 코드 구현
