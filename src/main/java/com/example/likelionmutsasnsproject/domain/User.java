@@ -1,7 +1,6 @@
 package com.example.likelionmutsasnsproject.domain;
 
-import com.example.likelionmutsasnsproject.dto.UserRole;
-import io.swagger.annotations.ApiParam;
+import com.example.likelionmutsasnsproject.dto.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,7 +1,7 @@
 package com.example.likelionmutsasnsproject.util;
 
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.UserRole;
+import com.example.likelionmutsasnsproject.dto.user.UserRole;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserService;
@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;

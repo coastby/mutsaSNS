@@ -1,4 +1,4 @@
-package com.example.likelionmutsasnsproject.dto;
+package com.example.likelionmutsasnsproject.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

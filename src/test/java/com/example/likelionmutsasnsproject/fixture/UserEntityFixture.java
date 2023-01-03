@@ -1,7 +1,7 @@
 package com.example.likelionmutsasnsproject.fixture;
 
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.UserRole;
+import com.example.likelionmutsasnsproject.dto.user.UserRole;
 
 public class UserEntityFixture {
     public static User get(String userName, String password){

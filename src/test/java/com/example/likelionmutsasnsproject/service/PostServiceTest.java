@@ -2,9 +2,9 @@ package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.PostResponse;
-import com.example.likelionmutsasnsproject.dto.PostWorkRequest;
-import com.example.likelionmutsasnsproject.dto.PostWorkResponse;
+import com.example.likelionmutsasnsproject.dto.post.PostResponse;
+import com.example.likelionmutsasnsproject.dto.post.PostWorkRequest;
+import com.example.likelionmutsasnsproject.dto.post.PostWorkResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.PostException;
 import com.example.likelionmutsasnsproject.exception.UserException;

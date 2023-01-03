@@ -1,7 +1,7 @@
 package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.UserRoleResponse;
+import com.example.likelionmutsasnsproject.dto.user.UserRoleResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.fixture.TestInfoFixture;

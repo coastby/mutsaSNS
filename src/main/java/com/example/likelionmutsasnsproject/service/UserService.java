@@ -1,10 +1,9 @@
 package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.UserJoinRequest;
-import com.example.likelionmutsasnsproject.dto.UserJoinResponse;
-import com.example.likelionmutsasnsproject.dto.UserRole;
-import com.example.likelionmutsasnsproject.dto.UserRoleResponse;
+import com.example.likelionmutsasnsproject.dto.user.UserJoinRequest;
+import com.example.likelionmutsasnsproject.dto.user.UserJoinResponse;
+import com.example.likelionmutsasnsproject.dto.user.UserRoleResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.UserRepository;

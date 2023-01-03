@@ -1,7 +1,7 @@
 package com.example.likelionmutsasnsproject.controller;
 
-import com.example.likelionmutsasnsproject.dto.CommentRequest;
-import com.example.likelionmutsasnsproject.dto.CommentResponse;
+import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
+import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
 import com.example.likelionmutsasnsproject.dto.Response;
 import com.example.likelionmutsasnsproject.service.CommentService;
 import io.swagger.annotations.ApiImplicitParam;

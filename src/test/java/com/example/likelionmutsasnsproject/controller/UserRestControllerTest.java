@@ -1,12 +1,11 @@
 package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
-import com.example.likelionmutsasnsproject.dto.*;
+import com.example.likelionmutsasnsproject.dto.user.*;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

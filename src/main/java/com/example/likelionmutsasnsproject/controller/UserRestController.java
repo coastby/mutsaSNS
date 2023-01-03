@@ -2,13 +2,13 @@ package com.example.likelionmutsasnsproject.controller;
 
 
 import com.example.likelionmutsasnsproject.dto.*;
+import com.example.likelionmutsasnsproject.dto.user.*;
 import com.example.likelionmutsasnsproject.exception.ErrorResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class UserRestController {
     @PostMapping(value = "/{id}/role/change")
     public ResponseEntity<Response<UserRoleResponse>> changeRole
             (@ApiParam(value = "userId", required = true, example = "1") @PathVariable Integer id,
-                 @RequestBody UserRoleRequest request, @ApiIgnore Authentication authentication){
+             @RequestBody UserRoleRequest request, @ApiIgnore Authentication authentication){
         String userName = authentication.getPrincipal().toString();
         UserRoleResponse response = userService.changeRole(id, request.getRole(), userName);
         return ResponseEntity.ok().body(Response.success(response));

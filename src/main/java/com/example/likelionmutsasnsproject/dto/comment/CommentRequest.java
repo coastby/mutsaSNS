@@ -1,4 +1,4 @@
-package com.example.likelionmutsasnsproject.dto;
+package com.example.likelionmutsasnsproject.dto.comment;
 
 import com.example.likelionmutsasnsproject.domain.Comment;
 import com.example.likelionmutsasnsproject.domain.Post;

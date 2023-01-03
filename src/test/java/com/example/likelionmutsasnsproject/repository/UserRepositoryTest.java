@@ -1,8 +1,7 @@
 package com.example.likelionmutsasnsproject.repository;
 
-import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.UserRole;
+import com.example.likelionmutsasnsproject.dto.user.UserRole;
 import com.example.likelionmutsasnsproject.fixture.UserEntityFixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.*;
 

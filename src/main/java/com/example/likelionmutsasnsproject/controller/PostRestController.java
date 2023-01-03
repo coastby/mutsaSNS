@@ -1,6 +1,9 @@
 package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.dto.*;
+import com.example.likelionmutsasnsproject.dto.post.PostResponse;
+import com.example.likelionmutsasnsproject.dto.post.PostWorkRequest;
+import com.example.likelionmutsasnsproject.dto.post.PostWorkResponse;
 import com.example.likelionmutsasnsproject.service.PostService;
 import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
