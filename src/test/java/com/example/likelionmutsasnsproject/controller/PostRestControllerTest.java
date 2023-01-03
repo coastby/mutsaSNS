@@ -52,7 +52,6 @@ class PostRestControllerTest {
     @WithMockCustomUser
     void post_add_success() throws Exception {
         given(postService.add(postWorkRequest, "user")).willReturn(new PostWorkResponse("포스트 등록 완료", 0));
-        given(postService.add(any(), any())).willReturn(new PostWorkResponse("포스트 등록 완료", 0));
 
         mockMvc.perform(
                 post("/api/v1/posts")
