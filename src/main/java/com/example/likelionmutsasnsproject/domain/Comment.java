@@ -1,11 +1,17 @@
 package com.example.likelionmutsasnsproject.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,4 +23,5 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
     private String comment;
+
 }

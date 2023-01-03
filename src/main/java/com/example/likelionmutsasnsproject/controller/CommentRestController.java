@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.controller;
 
+import com.example.likelionmutsasnsproject.dto.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.CommentResponse;
 import com.example.likelionmutsasnsproject.dto.Response;
 import com.example.likelionmutsasnsproject.service.CommentService;
@@ -7,6 +8,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +16,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1/posts")
@@ -36,4 +40,14 @@ public class CommentRestController {
         Page<CommentResponse> comments = commentService.getAll(postId, pageable);
         return ResponseEntity.ok().body(Response.success(comments));
     }
+    @PostMapping(value = "/{postId}/comments")
+    public ResponseEntity<Response<CommentResponse>> addComment(
+            @RequestBody CommentRequest request, @PathVariable Integer postId, @ApiIgnore Authentication authentication){
+        String userName = authentication.getPrincipal().toString();
+        CommentResponse response = commentService.add(request, postId, userName);
+        return ResponseEntity
+                .created(URI.create("/api/v1/posts/"+response.getPostId()+"/comments/"+response.getId()))
+                .body(Response.success(response));
+    }
+
 }
