@@ -20,7 +20,7 @@ public class Post extends BaseEntity{
     private Integer id;
     private String title;
     private String body;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
     private Timestamp deletedAt;
