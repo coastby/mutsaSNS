@@ -56,5 +56,4 @@ public class CommentRestController {
         CommentResponse response = commentService.edit(postId, id, request, userName);
         return Response.success(response);
     }
-
 }

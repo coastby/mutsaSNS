@@ -9,5 +9,4 @@ import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     Page<Comment> findAllByPostId(Integer postId, Pageable pageable);
-    Optional<Comment> findById(Integer id);
 }
