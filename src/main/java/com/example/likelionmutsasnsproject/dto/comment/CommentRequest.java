@@ -21,4 +21,12 @@ public class CommentRequest {
                 .comment(this.comment)
                 .build();
     }
+    public Comment editEntity(Comment comment){
+        return Comment.builder()
+                .id(comment.getId())
+                .post(comment.getPost())
+                .user(comment.getUser())
+                .comment(this.comment)
+                .build();
+    }
 }

@@ -9,11 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    Page<Post> findByisDeletedFalse(Pageable pageable);
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE Post p SET p.isDeleted=TRUE, p.deletedAt=:now WHERE p.id=:id")
-    void deletePostById(@Param(value="id") Integer id, @Param(value = "now")Timestamp now);
+    Page<Post> findAll(Pageable pageable);
+//    @Modifying(clearAutomatically = true)  -> @Where 쓰면서 사용x
+//    @Query("UPDATE Post p SET p.isDeleted=TRUE, p.deletedAt=:now WHERE p.id=:id")
+//    void deletePostById(@Param(value="id") Integer id, @Param(value = "now")Timestamp now);
 }

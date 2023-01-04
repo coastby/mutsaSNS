@@ -17,7 +17,7 @@ public class PostWorkRequest {
                 .title(this.getTitle())
                 .body(this.getBody())
                 .user(user)
-                .isDeleted(false)
+//                .isDeleted(false)
                 .build();
     }
     public Post editEntity(Post post) {
@@ -26,7 +26,7 @@ public class PostWorkRequest {
                 .title(this.getTitle())
                 .body(this.getBody())
                 .user(post.getUser())
-                .isDeleted(false)
+//                .isDeleted(false)
                 .build();
     }
 }

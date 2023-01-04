@@ -39,7 +39,7 @@ public class PostService {
     }
     @Transactional
     public Page<PostResponse> getAll(Pageable pageable) {
-        return postRepository.findByisDeletedFalse(pageable)
+        return postRepository.findAll(pageable)
                 .map(PostResponse::from);
     }
     @Transactional
@@ -74,7 +74,8 @@ public class PostService {
             throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 포스트만 수정/삭제할 수 있습니다.");
         }
         //쿼리로 isDeleted->true, deletedAt->현재시간 으로 변경
-        postRepository.deletePostById(post.getId(), new Timestamp(System.currentTimeMillis()));
+//        postRepository.deletePostById(post.getId(), new Timestamp(System.currentTimeMillis()));
+        post.deleteSoftly(new Timestamp(System.currentTimeMillis()));
         return PostWorkResponse.builder()
                 .message("포스트 삭제 완료")
                 .postId(postId)

@@ -49,5 +49,12 @@ public class CommentRestController {
                 .created(URI.create("/api/v1/posts/"+response.getPostId()+"/comments/"+response.getId()))
                 .body(Response.success(response));
     }
+    @PutMapping(value = "/{postId}/comments/{id}")
+    public Response<CommentResponse> editComment(@PathVariable Integer postId, @PathVariable Integer id,
+                             @ApiIgnore Authentication authentication, @RequestBody CommentRequest request){
+        String userName = authentication.getPrincipal().toString();
+        CommentResponse response = commentService.edit(postId, id, request, userName);
+        return Response.success(response);
+    }
 
 }

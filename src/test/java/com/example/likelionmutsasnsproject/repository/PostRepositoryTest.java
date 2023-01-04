@@ -19,16 +19,16 @@ class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-    @Test
-    @DisplayName("삭제 로직")
-    void delete_post(){
-        Timestamp now = new Timestamp(System.currentTimeMillis());
-        postRepository.deletePostById(1, now);
-
-        Post post = postRepository.findById(1).orElse(null);
-
-        assertTrue(post.isDeleted());
-        assertEquals(now, post.getDeletedAt());
-        assertEquals(1, post.getId());
-    }
+//    @Test
+//    @DisplayName("삭제 로직")
+//    void delete_post(){
+//        Timestamp now = new Timestamp(System.currentTimeMillis());
+//        postRepository.deletePostById(1, now);
+//
+//        Post post = postRepository.findById(1).orElse(null);
+//
+//        assertTrue(post.isDeleted());
+//        assertEquals(now, post.getDeletedAt());
+//        assertEquals(1, post.getId());
+//    }
 }

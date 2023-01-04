@@ -184,7 +184,7 @@ class PostServiceTest {
 
         given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
         given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
-        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+//        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
         //when
         PostWorkResponse response = assertDoesNotThrow(() -> postService.delete(fixture.getPostId(), fixture.getUserName()));
         //then
@@ -198,7 +198,7 @@ class PostServiceTest {
 
         given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
         given(userRepository.findByUserName("non_author")).willReturn(Optional.of(mockUserEntity));
-        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+//        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
 
         //when
         UserException e = assertThrows(UserException.class,
@@ -213,7 +213,7 @@ class PostServiceTest {
 
         given(postRepository.findById(fixture.getPostId())).willReturn(Optional.of(mockPostEntity)) ;
         given(userRepository.findByUserName("non")).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
-        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+//        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
 
         //when
         UserException e = assertThrows(UserException.class,
@@ -228,7 +228,7 @@ class PostServiceTest {
 
         given(postRepository.findById(fixture.getPostId())).willThrow(new PostException(ErrorCode.POST_NOT_FOUND));
         given(userRepository.findByUserName(fixture.getUserName())).willReturn(Optional.of(mockUserEntity));
-        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
+//        willDoNothing().given(postRepository).deletePostById(fixture.getPostId(), new Timestamp(System.currentTimeMillis()));
         //when
         PostException e = assertThrows(PostException.class,
                 () -> {postService.delete(fixture.getPostId(), "user");});

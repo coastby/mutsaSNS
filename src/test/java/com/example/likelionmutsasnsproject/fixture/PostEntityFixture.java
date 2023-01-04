@@ -13,7 +13,7 @@ public class PostEntityFixture {
                 .user(UserEntityFixture.get(userName, password))
                 .title("title")
                 .body("body")
-                .isDeleted(deleted)
+//                .isDeleted(deleted)
                 .build();
         ReflectionTestUtils.setField(
                 post,
@@ -29,6 +29,15 @@ public class PostEntityFixture {
                 new Timestamp(System.currentTimeMillis()),
                 Timestamp.class
         );
+        if(deleted) {
+            ReflectionTestUtils.setField(
+                    post,
+                    BaseEntity.class,
+                    "deletedAt",
+                    new Timestamp(System.currentTimeMillis()),
+                    Timestamp.class
+            );
+        }
         return post;
     }
 }
