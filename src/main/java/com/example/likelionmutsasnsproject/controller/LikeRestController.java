@@ -4,10 +4,7 @@ import com.example.likelionmutsasnsproject.dto.Response;
 import com.example.likelionmutsasnsproject.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
@@ -21,4 +18,10 @@ public class LikeRestController {
         String response = likeService.add(postId, userName);
         return Response.success(response);
     }
+    @GetMapping(value = "/{postId}/likes")
+    public Response<Integer> getCount(@PathVariable Integer postId){
+        Integer count = likeService.getCount(postId);
+        return Response.success(count);
+    }
+
 }

@@ -13,12 +13,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,6 +76,25 @@ class LikeRestControllerTest {
                     .andExpect(jsonPath("$.result.message").value(ErrorCode.POST_NOT_FOUND.getMessage()))
                     .andDo(print());
             verify(likeService).add(postId,"user");
+        }
+    }
+    @Nested
+    @DisplayName("좋아요 갯수 조회")
+    @WithMockUser
+    class likeCount{
+        @Test
+        @DisplayName("좋아요 갯수 조회 성공")
+        void like_count_success() throws Exception {
+            Integer postId = 1;
+            given(likeService.getCount(postId)).willReturn(3);
+
+            mockMvc.perform(get("/api/v1/posts/"+postId+"/likes")
+                    .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                    .andExpect(jsonPath("$.result").value("3"))
+                    .andDo(print());
+            verify(likeService).getCount(1);
         }
     }
 }

@@ -29,4 +29,9 @@ public class LikeService {
         Like saved = likeRepository.save(Like.makeLike(post, user));
         return "좋아요를 눌렀습니다.";
     }
+
+    public Integer getCount(Integer postId) {
+        Post post = postService.getPostByPostId(postId);    //포스트가 없거나 삭제되었으면 예외 발생 -> 알람 기능에서 사용할 예정
+        return likeRepository.countByPost(post);
+    }
 }
