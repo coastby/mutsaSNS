@@ -52,7 +52,6 @@ class CommentRepositoryTest {
         assertEquals(1, comment.getId());
         assertNotNull(comment.getCreatedAt());
         assertTrue(optionalComment.isEmpty());
-
     }
 
 }

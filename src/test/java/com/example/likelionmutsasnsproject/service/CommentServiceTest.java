@@ -8,6 +8,7 @@ import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
 import com.example.likelionmutsasnsproject.exception.CommentException;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
+import com.example.likelionmutsasnsproject.exception.PostException;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.fixture.CommentEntityFixture;
 import com.example.likelionmutsasnsproject.fixture.TestInfoFixture;
@@ -89,28 +90,43 @@ class CommentServiceTest {
             assertNotNull(response.getLastModifiedAt());
         }
         @Test
+        @DisplayName("댓글 수정 실패 - 포스트 존재하지 않음")
+        void edit_fail_포스트없음(){
+            CommentRequest request = new CommentRequest("바뀐 댓글");
+
+            given(postService.getPostByPostId(1)).willThrow(new PostException(ErrorCode.POST_NOT_FOUND));
+
+            PostException e =
+                    assertThrows(PostException.class, () -> commentService.edit(1, 1, request, "user"));
+            assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
+        }
+        @Test
         @DisplayName("댓글 수정 실패 - 작성자 불일치")
         void edit_fail_작성자불일치(){
             CommentRequest request = new CommentRequest("바뀐 댓글");
             Comment comment = CommentEntityFixture.get("user", "pw", false);
-            Comment saved = Comment.builder().id(comment.getId()).post(comment.getPost()).user(comment.getUser())
-                    .comment(request.getComment()).build();
-            ReflectionTestUtils.setField(
-                    saved,
-                    BaseEntity.class,
-                    "updatedAt",
-                    new Timestamp(System.currentTimeMillis()),
-                    Timestamp.class
-            );
 
             given(postService.getPostByPostId(1)).willReturn(new Post());
             given(commentRepository.findById(1)).willReturn(Optional.of(comment));
             given(userService.getUserByUserName("NotAuthor")).willReturn(UserEntityFixture.get("NotAuthor", "pw"));
-            given(commentRepository.saveAndFlush(any())).willReturn(saved);
 
             UserException e =
                     assertThrows(UserException.class, () -> commentService.edit(1, 1, request, "NotAuthor"));
             assertEquals(ErrorCode.INVALID_PERMISSION, e.getErrorCode());
+        }
+        @Test
+        @DisplayName("댓글 수정 실패 - 유저 존재하지 않음")
+        void edit_fail_유저없음(){
+            CommentRequest request = new CommentRequest("바뀐 댓글");
+            Comment comment = CommentEntityFixture.get("user", "pw", false);
+
+            given(postService.getPostByPostId(1)).willReturn(new Post());
+            given(commentRepository.findById(1)).willReturn(Optional.of(comment));
+            given(userService.getUserByUserName("NotUser")).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
+
+            UserException e =
+                    assertThrows(UserException.class, () -> commentService.edit(1, 1, request, "NotUser"));
+            assertEquals(ErrorCode.USERNAME_NOT_FOUND, e.getErrorCode());
         }
     }
 }

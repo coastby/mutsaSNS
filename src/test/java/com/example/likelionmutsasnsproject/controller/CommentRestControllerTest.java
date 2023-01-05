@@ -208,7 +208,7 @@ class CommentRestControllerTest {
         void edit_fail_DB에러() throws Exception {
             Integer commentId = response.getId();
             given(commentService.edit(postId, commentId, request, "user"))
-                    .willThrow(new PostException(ErrorCode.INTERNAL_SERVER_ERROR));
+                    .willThrow(new PostException(ErrorCode.DATABASE_ERROR));
 
             mockMvc.perform(
                             put("/api/v1/posts/" + postId + "/comments/"+commentId)
@@ -217,8 +217,8 @@ class CommentRestControllerTest {
                                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isInternalServerError())
                     .andExpect(jsonPath("$.resultCode").value("ERROR"))
-                    .andExpect(jsonPath("$.result.errorCode").value(ErrorCode.INTERNAL_SERVER_ERROR.name()))
-                    .andExpect(jsonPath("$.result.message").value(ErrorCode.INTERNAL_SERVER_ERROR.getMessage()))
+                    .andExpect(jsonPath("$.result.errorCode").value(ErrorCode.DATABASE_ERROR.name()))
+                    .andExpect(jsonPath("$.result.message").value(ErrorCode.DATABASE_ERROR.getMessage()))
                     .andDo(print());
             verify(commentService).edit(postId, commentId, request, "user");
         }

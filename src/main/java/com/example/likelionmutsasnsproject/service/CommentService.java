@@ -76,6 +76,7 @@ public class CommentService {
         Comment saved = commentRepository.saveAndFlush(request.editEntity(comment));
         return CommentResponse.fromForEdit(saved, createdAt);
     }
+    /**댓글 삭제**/
     @Transactional
     public CommentWorkResponse delete(Integer postId, Integer id, String userName) {
         Post post = postService.getPostByPostId(postId);    //포스트가 없거나 삭제되었으면 예외 발생 -> 알람 기능에서 사용할 예정
