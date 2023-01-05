@@ -2,7 +2,7 @@ package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.Alarm;
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.AlarmResponse;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmResponse;
 import com.example.likelionmutsasnsproject.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

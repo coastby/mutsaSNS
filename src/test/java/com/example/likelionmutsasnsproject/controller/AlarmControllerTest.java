@@ -1,24 +1,20 @@
 package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
-import com.example.likelionmutsasnsproject.dto.AlarmResponse;
-import com.example.likelionmutsasnsproject.dto.AlarmType;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmResponse;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmType;
 import com.example.likelionmutsasnsproject.service.AlarmService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.*;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;

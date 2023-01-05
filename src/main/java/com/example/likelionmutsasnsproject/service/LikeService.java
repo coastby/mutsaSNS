@@ -4,17 +4,14 @@ import com.example.likelionmutsasnsproject.domain.Alarm;
 import com.example.likelionmutsasnsproject.domain.Like;
 import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.AlarmType;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmType;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.LikeException;
-import com.example.likelionmutsasnsproject.repository.AlarmRepository;
 import com.example.likelionmutsasnsproject.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

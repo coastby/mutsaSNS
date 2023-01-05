@@ -1,6 +1,6 @@
 package com.example.likelionmutsasnsproject.domain;
 
-import com.example.likelionmutsasnsproject.dto.AlarmType;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

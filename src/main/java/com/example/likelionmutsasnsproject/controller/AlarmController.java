@@ -1,7 +1,7 @@
 package com.example.likelionmutsasnsproject.controller;
 
-import com.example.likelionmutsasnsproject.dto.AlarmListResponse;
-import com.example.likelionmutsasnsproject.dto.AlarmResponse;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmListResponse;
+import com.example.likelionmutsasnsproject.dto.alarrm.AlarmResponse;
 import com.example.likelionmutsasnsproject.dto.Response;
 import com.example.likelionmutsasnsproject.service.AlarmService;
 import io.swagger.annotations.Api;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/alarms")
