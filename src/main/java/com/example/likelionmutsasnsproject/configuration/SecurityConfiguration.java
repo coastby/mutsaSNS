@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers("/api/v1/hello/**").permitAll()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
+                .antMatchers("/api/v1/posts/my").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                 .antMatchers("/api/v1/users/*/role/change").access("hasRole('ADMIN')")
                 .antMatchers("/api/**").authenticated()

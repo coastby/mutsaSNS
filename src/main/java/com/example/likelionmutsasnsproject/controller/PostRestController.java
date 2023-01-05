@@ -37,7 +37,7 @@ public class PostRestController {
             @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query")
     })
     @GetMapping
-    public ResponseEntity<Response<Page>> showListPage(
+    public ResponseEntity<Response<Page>> showAllListPage(
             @ApiIgnore @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         Page<PostResponse> postResponses = postService.getAll(pageable);
         return ResponseEntity.ok().body(Response.success(postResponses));
@@ -74,5 +74,16 @@ public class PostRestController {
         String userName = authentication.getPrincipal().toString();
         PostWorkResponse response = postService.update(id, request, userName);
         return ResponseEntity.ok().body(Response.success(response));
+    }
+    @Operation(summary = "마이피드",
+            description = "내가 작성한 글만 보이는 기능")
+    @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "페이지 번호", defaultValue = "0")
+    @GetMapping(value = "/my")
+    public Response<Page> showMyListPage(
+            @ApiIgnore @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @ApiIgnore Authentication authentication){
+        String userName = authentication.getPrincipal().toString();
+        Page<PostResponse> postResponses = postService.getMyPosts(userName, pageable);
+        return Response.success(postResponses);
     }
 }

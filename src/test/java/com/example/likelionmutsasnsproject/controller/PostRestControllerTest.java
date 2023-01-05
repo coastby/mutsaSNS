@@ -280,5 +280,42 @@ class PostRestControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
+    /**
+     * 마이피드 테스트
+     * **/
+    @Test
+    @DisplayName("마이피드 조회 성공")
+    @WithMockCustomUser
+    void show_my_list_success() throws Exception {
+        //가짜 결과값
+        List<PostResponse> postList = List.of(PostResponse.builder()
+                .title("제목")
+                .createdAt("날짜")
+                .build());
+        Page<PostResponse> response = new PageImpl<>(postList);
+
+        given(postService.getMyPosts("user", pageable)).willReturn(response);
+
+        mockMvc.perform(get("/api/v1/posts/my")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.content").exists())
+                .andExpect(jsonPath("$.result.pageable").exists())
+                .andExpect(jsonPath("$['result']['content'][0]['title']").exists())
+                .andExpect(jsonPath("$['result']['content'][0]['createdAt']").exists())
+                .andDo(print());
+    }
+    @Test
+    @DisplayName("마이피드 조회 실패 - 인증실패")
+    @WithAnonymousUser
+    void show_my_list_fail() throws Exception {
+        mockMvc.perform(
+                        post("/api/v1/posts/my")
+                                .with(csrf())
+                                .content(objectMapper.writeValueAsBytes(postWorkRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
 
 }

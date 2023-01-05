@@ -91,4 +91,12 @@ public class PostService {
                 .postId(saved.getId())
                 .build();
     }
+
+    public Page<PostResponse> getMyPosts(String userName, Pageable pageable) {
+        //유저가 존재하지 않을 때 등록 실패 -> USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND,"Not founded")
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
+        return postRepository.findAllByUser(user, pageable)
+                .map(PostResponse::from);
+    }
 }
