@@ -19,6 +19,6 @@ public enum ErrorCode {
     INVALID_VALUE(HttpStatus.BAD_REQUEST, "입력값이 잘못되었습니다."),
     INVALID_REQUEST(HttpStatus.CONFLICT, "잘못된 요청입니다.");
 
-    private HttpStatus status;
-    private String message;
+    private final HttpStatus status;
+    private final String message;
 }

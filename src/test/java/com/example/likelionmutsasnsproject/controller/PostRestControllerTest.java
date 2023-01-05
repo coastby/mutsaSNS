@@ -317,5 +317,4 @@ class PostRestControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
-
 }

@@ -19,14 +19,15 @@ import static org.mockito.Mockito.mock;
 
 class LikeServiceTest {
     private LikeService likeService;
-    private LikeRepository likeRepository = mock(LikeRepository.class);
-    private UserService userService = mock(UserService.class);
-    private PostService postService = mock(PostService.class);
+    private final LikeRepository likeRepository = mock(LikeRepository.class);
+    private final AlarmService alarmService = mock(AlarmService.class);
+    private final UserService userService = mock(UserService.class);
+    private final PostService postService = mock(PostService.class);
     private TestInfoFixture.TestInfo fixture;
 
     @BeforeEach
     void setUp(){
-        likeService = new LikeService(likeRepository, postService, userService);
+        likeService = new LikeService(likeRepository, alarmService, postService, userService);
         fixture = TestInfoFixture.get();
     }
 

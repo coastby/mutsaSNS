@@ -24,7 +24,7 @@ import java.net.URI;
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 @Slf4j
-@Api(tags = "POST API")
+@Api(tags = "포스트")
 public class PostRestController {
     private final PostService postService;
     @Operation(summary = "전체 포스트 리스트 조회",
@@ -52,7 +52,7 @@ public class PostRestController {
 
     @Operation(summary = "포스트 작성", description = "로그인 후 작성 가능")
     @PostMapping
-    public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostWorkRequest request, @ApiIgnore Authentication authentication){
+    public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostWorkRequest request, Authentication authentication){
         String userName = authentication.getPrincipal().toString();
         PostWorkResponse response = postService.add(request, userName);
         return ResponseEntity.created(URI.create("/api/v1/posts/"+response.getPostId()))
@@ -70,7 +70,7 @@ public class PostRestController {
     @ApiImplicitParam(name = "id", value = "포스트 ID")
     @PutMapping(value = "/{id}")
     public ResponseEntity<Response<PostWorkResponse>> edit
-            (@RequestBody PostWorkRequest request, @PathVariable Integer id, @ApiIgnore Authentication authentication){
+            (@RequestBody PostWorkRequest request, @PathVariable Integer id, Authentication authentication){
         String userName = authentication.getPrincipal().toString();
         PostWorkResponse response = postService.update(id, request, userName);
         return ResponseEntity.ok().body(Response.success(response));
@@ -80,8 +80,8 @@ public class PostRestController {
     @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "페이지 번호", defaultValue = "0")
     @GetMapping(value = "/my")
     public Response<Page> showMyListPage(
-            @ApiIgnore @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            @ApiIgnore Authentication authentication){
+            @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            Authentication authentication){
         String userName = authentication.getPrincipal().toString();
         Page<PostResponse> postResponses = postService.getMyPosts(userName, pageable);
         return Response.success(postResponses);

@@ -1,14 +1,17 @@
 package com.example.likelionmutsasnsproject.service;
 
+import com.example.likelionmutsasnsproject.domain.Alarm;
 import com.example.likelionmutsasnsproject.domain.Comment;
 import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
+import com.example.likelionmutsasnsproject.dto.AlarmType;
 import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
 import com.example.likelionmutsasnsproject.dto.comment.CommentWorkResponse;
 import com.example.likelionmutsasnsproject.exception.CommentException;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
+import com.example.likelionmutsasnsproject.repository.AlarmRepository;
 import com.example.likelionmutsasnsproject.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,7 @@ import java.sql.Timestamp;
 @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final AlarmService alarmService;
     private final PostService postService;
     private final UserService userService;
     /**댓글 조회**/
@@ -42,6 +46,11 @@ public class CommentService {
         }
 
         Comment saved = commentRepository.save(request.toEntity(post, user));   //댓글 등록
+
+        if(post.getUser().getId() != user.getId()){   //포스트작성자와 이용자가 다르면 알람 등록
+            Alarm alarm = Alarm.makeAlarm(AlarmType.NEW_COMMENT_ON_POST, post, user.getId());
+            alarmService.saveAlarm(alarm);
+        }
         return CommentResponse.from(saved);
     }
     // 1) user가 존재하고 2) ADMIN이면 3) 작성자와 유저가 동일하면 true 반환

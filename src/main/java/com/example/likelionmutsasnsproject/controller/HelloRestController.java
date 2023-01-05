@@ -1,6 +1,7 @@
 package com.example.likelionmutsasnsproject.controller;
 
 import com.example.likelionmutsasnsproject.service.HelloService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Api(tags = "기본")
 public class HelloRestController {
     private final HelloService helloService;
     @GetMapping(value = "/hello")

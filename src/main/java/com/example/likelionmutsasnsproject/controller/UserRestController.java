@@ -22,7 +22,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
-@Api(tags = "USER API")
+@Api(tags = "사용자")
 public class UserRestController {
     private final UserService userService;
     private final UserLoginService userLoginService;

@@ -30,15 +30,15 @@ import static org.mockito.Mockito.mock;
 
 class CommentServiceTest {
     private CommentService commentService;
-    private CommentRepository commentRepository = mock(CommentRepository.class);
-    private UserService userService = mock(UserService.class);
-    private PostService postService = mock(PostService.class);
-    private TestInfoFixture.TestInfo fixture;
+    private final CommentRepository commentRepository = mock(CommentRepository.class);
+    private final AlarmService alarmService = mock(AlarmService.class);
+    private final UserService userService = mock(UserService.class);
+    private final PostService postService = mock(PostService.class);
 
     @BeforeEach
     void setUp(){
-        commentService = new CommentService(commentRepository, postService, userService);
-        fixture = TestInfoFixture.get();
+        commentService = new CommentService(commentRepository, alarmService, postService, userService);
+        TestInfoFixture.TestInfo fixture = TestInfoFixture.get();
     }
     @Nested
     @DisplayName("댓글 등록")
