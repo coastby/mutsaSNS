@@ -3,6 +3,7 @@ package com.example.likelionmutsasnsproject.controller;
 import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
 import com.example.likelionmutsasnsproject.dto.Response;
+import com.example.likelionmutsasnsproject.dto.comment.CommentWorkResponse;
 import com.example.likelionmutsasnsproject.service.CommentService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -54,6 +55,13 @@ public class CommentRestController {
                              @ApiIgnore Authentication authentication, @RequestBody CommentRequest request){
         String userName = authentication.getPrincipal().toString();
         CommentResponse response = commentService.edit(postId, id, request, userName);
+        return Response.success(response);
+    }
+    @DeleteMapping(value = "/{postId}/comments/{id}")
+    public Response<CommentWorkResponse> edit(@PathVariable Integer postId, @PathVariable Integer id,
+                                              @ApiIgnore Authentication authentication){
+        String userName = authentication.getPrincipal().toString();
+        CommentWorkResponse response = commentService.delete(postId, id, userName);
         return Response.success(response);
     }
 }

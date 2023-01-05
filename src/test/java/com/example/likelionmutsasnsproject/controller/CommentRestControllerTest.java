@@ -3,9 +3,11 @@ package com.example.likelionmutsasnsproject.controller;
 import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
 import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
+import com.example.likelionmutsasnsproject.dto.comment.CommentWorkResponse;
 import com.example.likelionmutsasnsproject.exception.CommentException;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.PostException;
+import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.service.CommentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -219,6 +221,89 @@ class CommentRestControllerTest {
                     .andExpect(jsonPath("$.result.message").value(ErrorCode.INTERNAL_SERVER_ERROR.getMessage()))
                     .andDo(print());
             verify(commentService).edit(postId, commentId, request, "user");
+        }
+    }
+    @Nested
+    @DisplayName("댓글 삭제")
+    @WithMockCustomUser
+    class deleteTest {
+        @Test
+        @DisplayName("댓글 삭제 성공")
+        void delete_success() throws Exception {
+            Integer commentId = response.getId();
+            CommentWorkResponse workResponse = CommentWorkResponse.builder()
+                    .message("댓글 삭제 완료")
+                    .id(commentId)
+                    .build();
+            given(commentService.delete(postId, commentId, "user")).willReturn(workResponse);
+
+            mockMvc.perform(
+                            delete("/api/v1/posts/" + postId + "/comments/" + commentId)
+                                    .with(csrf()))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                    .andExpect(jsonPath("$.result.message").value("댓글 삭제 완료"))
+                    .andExpect(jsonPath("$.result.id").value(commentId))
+                    .andDo(print());
+            verify(commentService).delete(postId, commentId, "user");
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - 인증 실패")
+        @WithAnonymousUser
+        void delete_fail_인증실패() throws Exception {
+            mockMvc.perform(
+                            delete("/api/v1/posts/" + postId + "/comments/"+1)
+                                    .with(csrf()))
+                    .andExpect(status().isUnauthorized())
+                    .andDo(print());
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - Post 없는 경우")
+        void delete_fail_post없음() throws Exception {
+            given(commentService.delete(postId, 1, "user"))
+                    .willThrow(new PostException(ErrorCode.POST_NOT_FOUND));
+
+            mockMvc.perform(
+                            delete("/api/v1/posts/" + postId + "/comments/" + 1)
+                                    .with(csrf()))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                    .andExpect(jsonPath("$.result.errorCode").value(ErrorCode.POST_NOT_FOUND.name()))
+                    .andExpect(jsonPath("$.result.message").value(ErrorCode.POST_NOT_FOUND.getMessage()))
+                    .andDo(print());
+            verify(commentService).delete(postId, 1, "user");
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - 작성자 불일치")
+        void delete_fail_작성자불일치() throws Exception {
+            given(commentService.delete(postId, 1, "user"))
+                    .willThrow(new UserException(ErrorCode.INVALID_PERMISSION));
+
+            mockMvc.perform(
+                            delete("/api/v1/posts/" + postId + "/comments/" + 1)
+                                    .with(csrf()))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                    .andExpect(jsonPath("$.result.errorCode").value(ErrorCode.INVALID_PERMISSION.name()))
+                    .andExpect(jsonPath("$.result.message").value(ErrorCode.INVALID_PERMISSION.getMessage()))
+                    .andDo(print());
+            verify(commentService).delete(postId, 1, "user");
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - DB에러")
+        void delete_fail_DB에러() throws Exception {
+            given(commentService.delete(postId, 1, "user"))
+                    .willThrow(new PostException(ErrorCode.INTERNAL_SERVER_ERROR));
+
+            mockMvc.perform(
+                            delete("/api/v1/posts/" + postId + "/comments/" + 1)
+                                    .with(csrf()))
+                    .andExpect(status().isInternalServerError())
+                    .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                    .andExpect(jsonPath("$.result.errorCode").value(ErrorCode.INTERNAL_SERVER_ERROR.name()))
+                    .andExpect(jsonPath("$.result.message").value(ErrorCode.INTERNAL_SERVER_ERROR.getMessage()))
+                    .andDo(print());
+            verify(commentService).delete(postId, 1, "user");
         }
     }
 }

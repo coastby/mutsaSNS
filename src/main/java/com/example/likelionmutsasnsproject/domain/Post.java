@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Where(clause = "deleted_at is NULL")
+@Where(clause = "deleted_at is NULL") //select query에 같이 붙어서 나간다.
 public class Post extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

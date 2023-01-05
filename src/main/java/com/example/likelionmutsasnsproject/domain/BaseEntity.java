@@ -25,8 +25,8 @@ public class BaseEntity {
     @Getter(value = AccessLevel.PROTECTED)
     @Column(columnDefinition = "datetime null default null")
     private Timestamp deletedAt;
-    public void deleteSoftly(Timestamp deletedAt){
-        this.deletedAt = deletedAt;
+    public void deleteSoftly(){
+        this.deletedAt = new Timestamp(System.currentTimeMillis());
     }
     public boolean isDeleted(){
         return null != deletedAt;

@@ -5,6 +5,7 @@ import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
+import com.example.likelionmutsasnsproject.dto.comment.CommentWorkResponse;
 import com.example.likelionmutsasnsproject.exception.CommentException;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
@@ -74,5 +75,18 @@ public class CommentService {
 
         Comment saved = commentRepository.saveAndFlush(request.editEntity(comment));
         return CommentResponse.fromForEdit(saved, createdAt);
+    }
+    @Transactional
+    public CommentWorkResponse delete(Integer postId, Integer id, String userName) {
+        Post post = postService.getPostByPostId(postId);    //포스트가 없거나 삭제되었으면 예외 발생 -> 알람 기능에서 사용할 예정
+        Comment comment = getCommentById(id);       //댓글 아이디에 해당하는 댓글이 없으면 예외 발생
+        if(!validateUserToComment(comment, userName)){
+            throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 댓글만 수정/삭제할 수 있습니다.");
+        }
+        comment.deleteSoftly();
+        return CommentWorkResponse.builder()
+                .message("댓글 삭제 완료")
+                .id(comment.getId())
+                .build();
     }
 }
