@@ -16,7 +16,8 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 없습니다."),
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB에러"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버에러"),
-    INVALID_VALUE(HttpStatus.BAD_REQUEST, "입력값이 잘못되었습니다.");
+    INVALID_VALUE(HttpStatus.BAD_REQUEST, "입력값이 잘못되었습니다."),
+    INVALID_REQUEST(HttpStatus.CONFLICT, "잘못된 요청입니다.");
 
     private HttpStatus status;
     private String message;
