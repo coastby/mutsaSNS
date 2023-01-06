@@ -7,6 +7,7 @@ import com.example.likelionmutsasnsproject.dto.post.PostWorkResponse;
 import com.example.likelionmutsasnsproject.service.PostService;
 import io.swagger.annotations.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,8 +34,7 @@ public class PostRestController {
             @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
                     value = "페이지 번호", defaultValue = "0"),
             @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
-                    value = "페이지 당 포스트 수", defaultValue = "20"),
-            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query")
+                    value = "페이지 당 포스트 수", defaultValue = "20")
     })
     @GetMapping
     public ResponseEntity<Response<Page>> showAllListPage(
@@ -45,7 +45,7 @@ public class PostRestController {
     @Operation(summary = "단일 포스트 조회")
     @ApiImplicitParam(name = "id", value = "포스트 ID")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Response<PostResponse>> showPost(@PathVariable Integer id){
+    public ResponseEntity<Response<PostResponse>> showPost(@Parameter(description = "포스트ID") @PathVariable Integer id){
         PostResponse response = postService.getById(id);
         return ResponseEntity.ok().body(Response.success(response));
     }
@@ -59,18 +59,16 @@ public class PostRestController {
                 .body(Response.success(response));
     }
     @Operation(summary = "포스트 삭제", description = "로그인 한 사용자와 작성자가 동일해야 삭제 가능")
-    @ApiImplicitParam(name = "id", value = "포스트 ID")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Response<PostWorkResponse>> delete(@PathVariable Integer id, Authentication authentication){
+    public ResponseEntity<Response<PostWorkResponse>> delete(@Parameter(description = "포스트ID") @PathVariable Integer id, Authentication authentication){
         String userName = authentication.getPrincipal().toString();
         PostWorkResponse response = postService.delete(id, userName);
         return ResponseEntity.ok().body(Response.success(response));
     }
     @Operation(summary = "포스트 수정", description = "로그인 한 사용자와 작성자가 동일해야 수정 가능")
-    @ApiImplicitParam(name = "id", value = "포스트 ID")
     @PutMapping(value = "/{id}")
     public ResponseEntity<Response<PostWorkResponse>> edit
-            (@RequestBody PostWorkRequest request, @PathVariable Integer id, Authentication authentication){
+            (@RequestBody PostWorkRequest request, @Parameter(description = "포스트ID") @PathVariable Integer id, Authentication authentication){
         String userName = authentication.getPrincipal().toString();
         PostWorkResponse response = postService.update(id, request, userName);
         return ResponseEntity.ok().body(Response.success(response));
