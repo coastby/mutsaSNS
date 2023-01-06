@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.domain;
 
+import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
@@ -23,4 +24,8 @@ public class Comment extends BaseEntity{
     private User user;
     @Column(nullable = false)
     private String comment;
+
+    public void update (CommentRequest request){
+        this.comment = request.getComment();
+    }
 }

@@ -35,6 +35,20 @@ class LikeServiceTest {
     @DisplayName("좋아요")
     class addLike{
         @Test
+        @DisplayName("좋아요 성공")
+        void add_success(){
+            User user = UserEntityFixture.get("user", "pw");
+            Post post = PostEntityFixture.get("author", "pw", false);
+
+            given(postService.getPostByPostId(1)).willReturn(post);
+            given(userService.getUserByUserName("user")).willReturn(user);
+            given(likeRepository.existsByPostAndUser(post.getId(), user.getId())).willReturn(0);
+
+           String response  = assertDoesNotThrow(() -> likeService.add(1, "user"));
+
+            assertEquals("좋아요를 눌렀습니다.", response);
+        }
+        @Test
         @DisplayName("좋아요 실패 - 이미 완료된 처리")
         void add_fail_중복(){
             User user = UserEntityFixture.get("user", "pw");

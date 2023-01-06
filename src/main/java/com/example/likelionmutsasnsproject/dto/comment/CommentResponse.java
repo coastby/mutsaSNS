@@ -27,15 +27,4 @@ public class CommentResponse {
                 .lastModifiedAt(dateFormat.format(comment.getUpdatedAt()))
                 .build();
     }
-    public static CommentResponse fromForEdit (Comment comment, Timestamp createdAt){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        return CommentResponse.builder()
-                .id(comment.getId())
-                .comment(comment.getComment())
-                .userName(comment.getUser().getUserName())
-                .postId(comment.getPost().getId())
-                .createdAt(dateFormat.format(createdAt))
-                .lastModifiedAt(dateFormat.format(comment.getUpdatedAt()))
-                .build();
-    }
 }
