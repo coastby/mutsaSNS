@@ -1,6 +1,5 @@
 package com.example.likelionmutsasnsproject.controller;
 
-import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
 import com.example.likelionmutsasnsproject.service.HelloService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

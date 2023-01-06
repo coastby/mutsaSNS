@@ -2,7 +2,6 @@ package com.example.likelionmutsasnsproject.fixture;
 
 import com.example.likelionmutsasnsproject.domain.BaseEntity;
 import com.example.likelionmutsasnsproject.domain.Comment;
-import com.example.likelionmutsasnsproject.domain.Post;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.sql.Timestamp;
