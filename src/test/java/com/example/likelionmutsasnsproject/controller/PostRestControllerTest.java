@@ -49,7 +49,7 @@ class PostRestControllerTest {
      * **/
     @Test
     @DisplayName("포스트 작성 성공")
-    @WithMockCustomUser
+//    @WithMockCustomUser
     void post_add_success() throws Exception {
         given(postService.add(postWorkRequest, "user")).willReturn(new PostWorkResponse("포스트 등록 완료", 0));
 

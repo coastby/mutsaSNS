@@ -39,14 +39,14 @@ class UserServiceTest {
         User auth = UserEntityFixture.getADMIN("auth", "pw");
         //given
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-        given(userRepository.findByUserName(auth.getUserName())).willReturn(Optional.of(auth));
+        given(userRepository.findByUserName(auth.getUsername())).willReturn(Optional.of(auth));
 
         //when
-        UserRoleResponse response = assertDoesNotThrow(() -> userService.changeRole(user.getId(), "ADMIN", auth.getUserName()));
+        UserRoleResponse response = assertDoesNotThrow(() -> userService.changeRole(user.getId(), "ADMIN", auth.getUsername()));
 
         //then
         assertEquals(response.getMessage(), "ADMIN" + "(으)로 변경되었습니다.");
-        assertEquals(response.getUserName(), user.getUserName());
+        assertEquals(response.getUserName(), user.getUsername());
         verify(userRepository).changeRoleToAdmin(user.getId());
     }
     @Test
@@ -56,11 +56,11 @@ class UserServiceTest {
         User auth = UserEntityFixture.getADMIN("auth", "pw");
         //given
         given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
-        given(userRepository.findByUserName(auth.getUserName())).willReturn(Optional.of(auth));
+        given(userRepository.findByUserName(auth.getUsername())).willReturn(Optional.of(auth));
 
         //when
         UserException e = assertThrows(UserException.class,
-                () -> userService.changeRole(user.getId(), "잘못입력된값", auth.getUserName()));
+                () -> userService.changeRole(user.getId(), "잘못입력된값", auth.getUsername()));
         //then
         assertEquals(ErrorCode.INVALID_VALUE, e.getErrorCode());
     }

@@ -1,10 +1,12 @@
 package com.example.likelionmutsasnsproject.util;
 
 import com.example.likelionmutsasnsproject.domain.User;
+import com.example.likelionmutsasnsproject.domain.user.UserProfile;
 import com.example.likelionmutsasnsproject.dto.user.UserRole;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
+import com.example.likelionmutsasnsproject.service.UserDetailsServiceImpl;
 import com.example.likelionmutsasnsproject.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +35,7 @@ public class JwtUtil {
     @Value("${jwt.token.refresh}")
     private String refreshKey;
     private final UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsService;
     private final long accessExpiredTimeMs = 1000 * 60 * 60; // 60min
     private final long refreshExpirredTimeMs = 1000 * 60 * 60 * 24 * 7; // 일주일
 
@@ -72,7 +76,8 @@ public class JwtUtil {
         response.addHeader("Set-Cookie", cookie.toString());
     }
     private void saveRefreshToken(Authentication authentication, String refreshToken) {
-        String userName = authentication.getPrincipal().toString();
+        UserProfile user = (UserProfile) authentication.getPrincipal();
+        String userName = user.getUserName();
         userRepository.updateRefreshToken(userName, refreshToken);
     }
 
@@ -98,14 +103,9 @@ public class JwtUtil {
     //token으로 authentication 꺼내는 메서드
     public UsernamePasswordAuthenticationToken getAuthentication(String token){
         String userName = extractClaims(token).get("userName", String.class);
-        User user;
-        try{
-            user = userRepository.findByUserName(userName)
-                    .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
-        } catch (UserException e){
-            throw new UserException(e.getErrorCode(), "유효하지 않은 아이디입니다.");
-        }
-        return new UsernamePasswordAuthenticationToken(user.getUserName(), null,
-                List.of(new SimpleGrantedAuthority(user.getRole().name())));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
     }
 }

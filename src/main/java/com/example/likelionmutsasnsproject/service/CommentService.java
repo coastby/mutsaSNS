@@ -62,7 +62,7 @@ public class CommentService {
             return true;
         }
         //로그인한 아이디와 게시글의 작성자가 다르면 권한없음
-        return userName.equals(comment.getUser().getUserName());
+        return userName.equals(comment.getUser().getUsername());
     }
     public Comment getCommentById(Integer id){
         return commentRepository.findById(id)    //댓글 아이디에 해당하는 댓글이 없으면 예외 발생

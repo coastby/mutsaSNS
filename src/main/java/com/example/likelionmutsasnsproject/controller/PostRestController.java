@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.controller;
 
+import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.*;
 import com.example.likelionmutsasnsproject.dto.post.PostResponse;
 import com.example.likelionmutsasnsproject.dto.post.PostWorkRequest;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -52,25 +55,22 @@ public class PostRestController {
 
     @Operation(summary = "포스트 작성", description = "로그인 후 작성 가능")
     @PostMapping
-    public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostWorkRequest request, Authentication authentication){
-        String userName = authentication.getPrincipal().toString();
-        PostWorkResponse response = postService.add(request, userName);
+    public ResponseEntity<Response<PostWorkResponse>> add(@RequestBody PostWorkRequest request, @AuthenticationPrincipal UserDetails user){
+        PostWorkResponse response = postService.add(request, user.getUsername());
         return ResponseEntity.created(URI.create("/api/v1/posts/"+response.getPostId()))
                 .body(Response.success(response));
     }
     @Operation(summary = "포스트 삭제", description = "로그인 한 사용자와 작성자가 동일해야 삭제 가능")
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Response<PostWorkResponse>> delete(@Parameter(description = "포스트ID") @PathVariable Integer id, Authentication authentication){
-        String userName = authentication.getPrincipal().toString();
-        PostWorkResponse response = postService.delete(id, userName);
+    public ResponseEntity<Response<PostWorkResponse>> delete(@Parameter(description = "포스트ID") @PathVariable Integer id, @AuthenticationPrincipal UserDetails user){
+        PostWorkResponse response = postService.delete(id, user.getUsername());
         return ResponseEntity.ok().body(Response.success(response));
     }
     @Operation(summary = "포스트 수정", description = "로그인 한 사용자와 작성자가 동일해야 수정 가능")
     @PutMapping(value = "/{id}")
     public ResponseEntity<Response<PostWorkResponse>> edit
-            (@RequestBody PostWorkRequest request, @Parameter(description = "포스트ID") @PathVariable Integer id, Authentication authentication){
-        String userName = authentication.getPrincipal().toString();
-        PostWorkResponse response = postService.update(id, request, userName);
+            (@RequestBody PostWorkRequest request, @Parameter(description = "포스트ID") @PathVariable Integer id, @AuthenticationPrincipal UserDetails user){
+        PostWorkResponse response = postService.update(id, request, user.getUsername());
         return ResponseEntity.ok().body(Response.success(response));
     }
     @Operation(summary = "마이피드",
@@ -79,9 +79,8 @@ public class PostRestController {
     @GetMapping(value = "/my")
     public Response<Page> showMyListPage(
             @PageableDefault(size=20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            Authentication authentication){
-        String userName = authentication.getPrincipal().toString();
-        Page<PostResponse> postResponses = postService.getMyPosts(userName, pageable);
+            @AuthenticationPrincipal UserDetails user){
+        Page<PostResponse> postResponses = postService.getMyPosts(user.getUsername(), pageable);
         return Response.success(postResponses);
     }
 }

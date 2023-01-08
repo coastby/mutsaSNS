@@ -22,7 +22,7 @@ public class PostResponse {
                 .id(post.getId())
                 .title(post.getTitle())
                 .body(post.getBody())
-                .userName(post.getUser().getUserName())
+                .userName(post.getUser().getUsername())
                 .createdAt(dateFormat.format(post.getCreatedAt()))
                 .lastModifiedAt(dateFormat.format(post.getUpdatedAt()))
                 .build();

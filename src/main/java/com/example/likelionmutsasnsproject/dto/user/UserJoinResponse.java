@@ -11,6 +11,6 @@ public class UserJoinResponse {
     private String userName;
 
     public static UserJoinResponse from(User user){
-        return new UserJoinResponse(user.getId(), user.getUserName());
+        return new UserJoinResponse(user.getId(), user.getUsername());
     }
 }

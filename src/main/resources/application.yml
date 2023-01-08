@@ -35,7 +35,7 @@ spring:
           kakao: #app-user-id, access-token, refresh-token
             client-id: 29ed7329b4fd1d7203e6c6315a07ef22
             client-secret: 비밀키
-            scope: profile,account_email
+            scope: profile_nickname,account_email
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             client-name: kakao

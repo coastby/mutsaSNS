@@ -31,7 +31,7 @@ public class UserLoginService {
         }
 
         //토큰 생성
-        String token = jwtUtil.generateToken(user.getUserName(), user.getRole());
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
         return new UserLoginResponse(token);
     }
 }

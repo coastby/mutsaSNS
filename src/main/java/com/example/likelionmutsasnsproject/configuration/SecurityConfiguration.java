@@ -43,7 +43,8 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                 .antMatchers("/api/v1/hello/**").permitAll()
                 .antMatchers(SWAGGER).permitAll()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception").permitAll()
+                .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception",
+                        "/oauth2/authorization/**").permitAll()
                 .antMatchers("/api/v1/posts/my").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                 .antMatchers("/api/v1/users/*/role/change").access("hasRole('ADMIN')")
@@ -56,7 +57,7 @@ public class SecurityConfiguration {
                 .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint)
                 .and()
                 .oauth2Login()
-                .userInfoEndpoint().userService(customOAuth2Service)    //provicer로부터 획득한 유저정보를 다룰 service단을 지정한다.
+                .userInfoEndpoint().userService(customOAuth2Service)    //provider로부터 획득한 유저정보를 다룰 service단을 지정한다.
                 .and()
                 .successHandler(OAuth2AuthenticationSuccessHandler)      //OAuth2 로그인 성공 시 호출한 handler
 //                .failureHandler(authenticationFailureHandelr)

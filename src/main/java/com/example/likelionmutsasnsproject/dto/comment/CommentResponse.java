@@ -21,7 +21,7 @@ public class CommentResponse {
         return CommentResponse.builder()
                 .id(comment.getId())
                 .comment(comment.getComment())
-                .userName(comment.getUser().getUserName())
+                .userName(comment.getUser().getUsername())
                 .postId(comment.getPost().getId())
                 .createdAt(dateFormat.format(comment.getCreatedAt()))
                 .lastModifiedAt(dateFormat.format(comment.getUpdatedAt()))

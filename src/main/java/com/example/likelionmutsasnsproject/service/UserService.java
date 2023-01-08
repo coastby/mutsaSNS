@@ -54,6 +54,6 @@ public class UserService {
                 throw new UserException(ErrorCode.INVALID_VALUE, "ADMIN, USER 중 하나를 입력해주세요.");
             }
         }
-        return new UserRoleResponse(role+"(으)로 변경되었습니다.", user.getUserName());
+        return new UserRoleResponse(role+"(으)로 변경되었습니다.", user.getUsername());
     }
 }

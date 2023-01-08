@@ -63,7 +63,7 @@ public class PostService {
             return true;
         }
         //로그인한 아이디와 게시글의 작성자가 다르면 권한없음
-        return userName.equals(post.getUser().getUserName());
+        return userName.equals(post.getUser().getUsername());
     }
     //1) 포스트가 있는지 2) 유저가 권한이 있는지
     @Transactional

@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.controller;
 
+import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.alarrm.AlarmListResponse;
 import com.example.likelionmutsasnsproject.dto.alarrm.AlarmResponse;
 import com.example.likelionmutsasnsproject.dto.Response;
@@ -12,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +28,9 @@ public class AlarmController {
     @Operation(summary = "알람 조회", description = "나의 포스트에 댓글이나 좋아요가 달리면 알림이 등록된다. <br> 알림은 20개씩 최신순으로 반환된다.")
 
     @GetMapping
-    public Response<AlarmListResponse> getAlarms(Authentication authentication,
+    public Response<AlarmListResponse> getAlarms(@AuthenticationPrincipal UserDetails user,
                                                  @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
-        String userName = authentication.getPrincipal().toString();
-        Page<AlarmResponse> alarms = alarmService.getAlarms(userName, pageable);
+        Page<AlarmResponse> alarms = alarmService.getAlarms(user.getUsername(), pageable);
         return Response.success(new AlarmListResponse(alarms.getContent()));
     }
 }

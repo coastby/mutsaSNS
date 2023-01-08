@@ -77,7 +77,7 @@ class CommentRestControllerTest {
 
     @Nested
     @DisplayName("댓글 작성")
-    @WithMockCustomUser
+//    @WithMockCustomUser
     class addTest{
         @Test
         @DisplayName("댓글 작성 성공")

@@ -133,7 +133,7 @@ class UserRestControllerTest {
      * **/
     @Test
     @DisplayName("권한 변경 성공")
-    @WithMockCustomUser(role = "ROLE_ADMIN")
+    @WithMockCustomUser(roles = "ROLE_ADMIN")
     void change_role_success() throws Exception {
         Integer userId = 1;
         String role = "ADMIN";

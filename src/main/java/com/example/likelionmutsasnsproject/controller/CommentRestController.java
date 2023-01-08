@@ -1,5 +1,6 @@
 package com.example.likelionmutsasnsproject.controller;
 
+import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
 import com.example.likelionmutsasnsproject.dto.Response;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -46,9 +49,8 @@ public class CommentRestController {
     @ApiImplicitParam(name = "postId", value = "포스트 ID")
     @PostMapping(value = "/{postId}/comments")
     public ResponseEntity<Response<CommentResponse>> addComment(
-            @RequestBody CommentRequest request, @Parameter(description = "포스트ID") @PathVariable Integer postId, Authentication authentication){
-        String userName = authentication.getPrincipal().toString();
-        CommentResponse response = commentService.add(request, postId, userName);
+            @RequestBody CommentRequest request, @Parameter(description = "포스트ID") @PathVariable Integer postId, @AuthenticationPrincipal UserDetails user){
+        CommentResponse response = commentService.add(request, postId, user.getUsername());
         return ResponseEntity
                 .created(URI.create("/api/v1/posts/"+response.getPostId()+"/comments/"+response.getId()))
                 .body(Response.success(response));
@@ -57,18 +59,16 @@ public class CommentRestController {
     @PutMapping(value = "/{postId}/comments/{id}")
     public Response<CommentResponse> editComment(@Parameter(description = "포스트ID") @PathVariable Integer postId,
                                                  @Parameter(description = "댓글ID") @PathVariable Integer id,
-                                                 Authentication authentication, @RequestBody CommentRequest request){
-        String userName = authentication.getPrincipal().toString();
-        CommentResponse response = commentService.edit(postId, id, request, userName);
+                                                 @AuthenticationPrincipal UserDetails user, @RequestBody CommentRequest request){
+        CommentResponse response = commentService.edit(postId, id, request, user.getUsername());
         return Response.success(response);
     }
     @Operation(summary = "댓글 삭제", description = "본인이 작성한 댓글만 삭제 가능")
     @DeleteMapping(value = "/{postId}/comments/{id}")
     public Response<CommentWorkResponse> edit(@Parameter(description = "포스트ID") @PathVariable Integer postId,
                                               @Parameter(description = "댓글ID") @PathVariable Integer id,
-                                              Authentication authentication){
-        String userName = authentication.getPrincipal().toString();
-        CommentWorkResponse response = commentService.delete(postId, id, userName);
+                                              @AuthenticationPrincipal UserDetails user){
+        CommentWorkResponse response = commentService.delete(postId, id, user.getUsername());
         return Response.success(response);
     }
 }
