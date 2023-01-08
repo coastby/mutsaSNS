@@ -4,16 +4,20 @@ import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.user.UserRole;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
+import com.example.likelionmutsasnsproject.repository.UserRepository;
 import com.example.likelionmutsasnsproject.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -25,8 +29,11 @@ import java.util.List;
 public class JwtUtil {
     @Value("${jwt.token.secret}")
     private String secretKey;
-    private final UserService userService;
-    private final long expiredTimeMs = 1000 * 60 * 60; // 60min
+    @Value("${jwt.token.refresh}")
+    private String refreshKey;
+    private final UserRepository userRepository;
+    private final long accessExpiredTimeMs = 1000 * 60 * 60; // 60min
+    private final long refreshExpirredTimeMs = 1000 * 60 * 60 * 24 * 7; // 일주일
 
     //key를 만드는 메서드
     private Key makeKey(){
@@ -43,10 +50,32 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiredTimeMs))
+                .setExpiration(new Date(System.currentTimeMillis() + accessExpiredTimeMs))
                 .signWith(makeKey())
                 .compact();
     }
+    public void generateRefreshToken(Authentication authentication, HttpServletResponse response){
+        String refreshToken = Jwts.builder()
+                .signWith(makeKey())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpirredTimeMs))
+                .compact();
+        saveRefreshToken(authentication, refreshToken);     //refreshToken DB에 저장
+        log.debug("refreshToken : {}", refreshToken);
+        ResponseCookie cookie = ResponseCookie.from(refreshKey, refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Lax")
+                .maxAge(refreshExpirredTimeMs/1000)
+                .path("/")
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
+    }
+    private void saveRefreshToken(Authentication authentication, String refreshToken) {
+        String userName = authentication.getPrincipal().toString();
+        userRepository.updateRefreshToken(userName, refreshToken);
+    }
+
     //token에서 claim 추출하는 메서드
     //token이 유효하지 않으면 custom exception throw
     public Claims extractClaims(String token){
@@ -71,7 +100,8 @@ public class JwtUtil {
         String userName = extractClaims(token).get("userName", String.class);
         User user;
         try{
-            user = userService.getUserByUserName(userName);
+            user = userRepository.findByUserName(userName)
+                    .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND));
         } catch (UserException e){
             throw new UserException(e.getErrorCode(), "유효하지 않은 아이디입니다.");
         }

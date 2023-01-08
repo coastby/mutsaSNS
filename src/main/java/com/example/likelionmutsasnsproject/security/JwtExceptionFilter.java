@@ -5,6 +5,7 @@ import com.example.likelionmutsasnsproject.exception.ErrorResponse;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 //토큰 관련 예외 처리
+@Component
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     @Override
