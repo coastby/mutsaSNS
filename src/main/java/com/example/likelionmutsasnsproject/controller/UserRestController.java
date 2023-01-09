@@ -59,6 +59,7 @@ public class UserRestController {
         UserRoleResponse response = userService.changeRole(id, request.getRole(), userName);
         return ResponseEntity.ok().body(Response.success(response));
     }
+    @Operation(summary = "나의 정보", description = "id값, username 반환")
     @GetMapping(value = "/my")
     public Response<UserResponse> getMyInfo(@AuthenticationPrincipal UserDetails user){
         UserResponse response = userService.getMyInfo(user.getUsername());
