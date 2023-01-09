@@ -3,6 +3,7 @@ package com.example.likelionmutsasnsproject.service;
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.user.UserJoinRequest;
 import com.example.likelionmutsasnsproject.dto.user.UserJoinResponse;
+import com.example.likelionmutsasnsproject.dto.user.UserResponse;
 import com.example.likelionmutsasnsproject.dto.user.UserRoleResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
@@ -10,6 +11,7 @@ import com.example.likelionmutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +57,10 @@ public class UserService {
             }
         }
         return new UserRoleResponse(role+"(으)로 변경되었습니다.", user.getUsername());
+    }
+    @Transactional
+    public UserResponse getMyInfo(String username) {
+        User user = getUserByUserName(username);
+        return UserResponse.from(user);
     }
 }

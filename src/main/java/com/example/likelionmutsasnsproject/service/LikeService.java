@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -42,5 +45,11 @@ public class LikeService {
     public Integer getCount(Integer postId) {
         Post post = postService.getPostByPostId(postId);    //포스트가 없거나 삭제되었으면 예외 발생 -> 알람 기능에서 사용할 예정
         return likeRepository.countByPost(post);
+    }
+    @Transactional
+    public List<Integer> getMyLikeList(String username) {
+        User user = userService.getUserByUserName(username);    //해당 유저가 없으면 예외 발생
+        List<Like> likes = likeRepository.findAllByUser(user);
+        return  likes.stream().map(like -> like.getPost().getId()).collect(Collectors.toList());
     }
 }

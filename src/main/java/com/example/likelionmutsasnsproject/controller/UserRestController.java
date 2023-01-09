@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -56,5 +58,10 @@ public class UserRestController {
         String userName = authentication.getPrincipal().toString();
         UserRoleResponse response = userService.changeRole(id, request.getRole(), userName);
         return ResponseEntity.ok().body(Response.success(response));
+    }
+    @GetMapping(value = "/my")
+    public Response<UserResponse> getMyInfo(@AuthenticationPrincipal UserDetails user){
+        UserResponse response = userService.getMyInfo(user.getUsername());
+        return Response.success(response);
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
@@ -23,6 +25,14 @@ public class LikeRestController {
         String response = likeService.add(postId, user.getUsername());
         return Response.success(response);
     }
+    @Operation(summary = "내가 좋아요한 게시글 아이디 조회", description = "포스트의 좋아요 갯수 조회")
+    @GetMapping(value = "/likes/my")
+    public Response<List> getMyLikeList(@AuthenticationPrincipal UserDetails user){
+        List<Integer> likedPosts = likeService.getMyLikeList(user.getUsername());
+        return Response.success(likedPosts);
+    }
+
+
     @Operation(summary = "좋아요 조회", description = "포스트의 좋아요 갯수 조회")
     @GetMapping(value = "/{postId}/likes")
     public Response<Integer> getCount(@Parameter(description = "포스트ID") @PathVariable Integer postId){

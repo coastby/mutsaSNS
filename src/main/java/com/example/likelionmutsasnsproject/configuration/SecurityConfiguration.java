@@ -41,7 +41,7 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/hello/**").permitAll()
+                .antMatchers("/api/v1/hello/**", "/css/**", "/img/**", "/index", "/").permitAll()
                 .antMatchers(SWAGGER).permitAll()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception",
                         "/oauth2/authorization/**").permitAll()

@@ -1,3 +1,302 @@
-<a href="/oauth2/authorization/kakao">Kakao Login</a><br>
-<a href="/oauth2/authorization/google">Google Login</a><br>
-<a href="/oauth2/authorization/naver">Naver Login</a><br>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Mutsa-SNS</title>
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/main.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+<body>
+<!-- navigation -->
+<nav>
+    <div class="nav-container">
+        <div class="nav-1">
+<!--            <img class="logo_instagram_txt" src="img/logo_text.png" alt="logo_text">-->
+            <h4>Mutsa-SNS</h4>
+        </div>
+        <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        <div class="nav-2">
+            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
+            <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
+            <span class="point-span">My</span>
+        </div>
+    </div>
+</nav>
+<!-- main -->
+<main>
+    <div class="feeds" id="feeds-box">
+        <!-- article -->
+        <article class="hidden">
+            <header>
+                <div class="profile-of-article">
+                    <span class="userID point-span-title">[SpringBoot] 스프링부트 Ajax를 이용한 비동기 통신</span>
+                    <span class="userID main-id point-span">dlwlrma</span>
+                </div>
+                <img class="icon-react icon-more" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
+            </header>
+            <div class="article-main">
+                <div class="artice-body">
+                    @ResponseBody 어노테이션을 반드시 붙여줍니다.
+                    파라미터 String info는 json형태의 스트링입니다.
+                    스트링 info를 Gson fromJson()을 이용하여 Map을 만들고 서비스 메소드를 이용하여 쿼리 결과를 가져옵니다.
+                    쿼리 결과(HashMap을 원소로 갖는 List = List<HashMap<Object, Object>> selectList)를
+                    Gson toJson()을 이용하여 json형태의 스트링으로 다시 변환합니다.
+                    그리고 이것을 리턴합니다.
+                </div>
+            </div>
+            <div class="icons-react">
+            </div>
+            <!-- article text data -->
+            <div class="reaction">
+                <div class="liked-people">
+                    <img class="icon-react" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
+                    <p><span class="point-bold">751명</span>이 좋아합니다</p>
+                </div>
+                <div class="comment-section">
+                    <ul class="comments">
+                        <li>
+                            <span><span class="point-bold userID">postmalone</span>내가 입으면 더 잘어울릴 것 같아</span>
+                            <div>
+                                <img class="comment-more" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
+                            </div>
+                        </li>
+                        <!-- input 값 여기에 추가 -->
+                    </ul>
+                    <div class="time-log">
+                        <span class="point-span userID">댓글 더보기</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hl"></div>
+            <div class="comment">
+                <input id="input-comment" class="input-comment" type="text" placeholder="댓글 달기..." >
+                <button type="submit" class="" id="submit-comment" disabled>게시</button>
+            </div>
+        </article>
+
+
+    </div>
+    <!-- main-right -->
+    <div class="main-right">
+        <div class="myProfile">
+            <img class="pic" src="https://item.kakaocdn.net/do/d84248170c2c52303db27306a00fb861f604e7b0e6900f9ac53a43965300eb9a" alt="프로필 사진">
+            <div>
+                <span class="userID point-bold" id="username-main">username</span>
+                <span class="sub-span">Not yet!</span>
+            </div>
+        </div>
+        <!-- alarm section -->
+        <!-- recommendation section -->
+
+        <footer>
+            <p class="insta-sccript">
+                소개 ∙ 도움말 ∙ 홍보 센터 ∙ API ∙ 채용 정보 ∙ 개인정보처리방침 ∙ <br>약관 ∙ 위치 ∙ 인기계정 ∙ 해시태그 ∙ 언어
+                <br><br>
+                © 2020 INSTAGRAM FROM FACEBOOK
+            </p>
+        </footer>
+    </div>
+</main>
+
+    <script>
+        var loginUser = {
+            token: 'eyJhbGciOiJIUzM4NCJ9.eyJ1c2VyTmFtZSI6InN0cmluZ3giLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjczMjUyODk3LCJleHAiOjE2NzMyNTY0OTd9.uajT1XD27ljXlQdl9s9RkAquGP8YL80VNY1olbgoR6R0BP4gTNP0qdQx-RYiFgG5',
+            userName: '유저 이름',
+            userId: null,
+            likeList: []
+        }
+
+        $(document).ready(function () {
+            if (loginUser.token != null){
+                getMyInfo();
+                likeListOfUser();
+            }
+            showPost();
+            $('#username-main').text(loginUser.userName);
+
+        });
+
+
+        function showPost() {
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/posts',
+                data: {},
+                success: function (response) {
+                    let posts = response['result']['content']
+                    for (let i = 0; i < posts.length; i++) {
+                        let id = posts[i]['id'];
+                        let title = posts[i]['title'];
+                        let body = posts[i]['body'];
+                        let userName = posts[i]['userName'];
+
+                        let temp_html = `
+                               <!-- article -->
+                                <article>
+                                    <header>
+                                        <div class="profile-of-article">
+                                            <span style="display: none" class="post-id">${id}</span>
+                                            <span class="userID point-span-title">${title}</span>
+                                            <span class="userID main-id point-span">${userName}</span>
+                                        </div>
+                                        <img class="icon-react icon-more" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/more.png" alt="more">
+                                    </header>
+                                    <div class="article-main">
+                                        <div class="artice-body">
+                                            ${body}
+                                        </div>
+                                    </div>
+                                    <div class="icons-react">
+                                    </div>
+                                    <!-- article text data -->
+                                    <div class="reaction">
+                                        <div class="liked-people">
+                                            <img class="icon-react" id="heart-icon-${id}" onclick="sendLike(${id})" src="img/heart_off.png" alt="하트">
+                                            <p><span class="point-bold" id="like-num-${id}">2,412,751명</span>이 좋아합니다</p>
+                                        </div>
+                                        <div class="comment-section">
+                                            <ul class="comments" id="comment-box-${id}">
+                                                <!-- input 값 여기에 추가 -->
+                                            </ul>
+                                            <div class="time-log">
+                                                <span class="point-span userID">댓글 더보기</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hl"></div>
+                                    <div class="comment">
+                                        <input id="input-comment-${id}" class="input-comment" type="text" placeholder="댓글 달기..." >
+                                        <button type="submit" class="submit-comment" onclick="sendComment(${id})">게시</button>
+                                    </div>
+                                </article>
+                        `
+                        $('#feeds-box').append(temp_html);
+                        showComment(id);
+                        showLikeNum(id);
+                        heartToggle(id);
+                    }
+                }
+            });
+        }
+        function showComment(postId){
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/posts/' + postId + '/comments',
+                data: {},
+                success: function (response) {
+                    let comments = response['result']['content']
+                    for (let i = 0; i < comments.length; i++) {
+                        let id = comments[i]['id'];
+                        let comment = comments[i]['comment'];
+                        let author = comments[i]['userName'];
+
+                        let temp_html = `
+                                 <li>
+                                    <span><span class="point-bold userID">${author}</span>${comment}</span>
+                                </li>
+                        `
+                        $('#comment-box-'+postId).append(temp_html);
+
+                    }
+                }
+            });
+        }
+        function showLikeNum(postId){
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/posts/' + postId + '/likes',
+                data: {},
+                success: function (response) {
+                    var likeNum = response['result'];
+                    $('#like-num-'+postId).text(likeNum+'명')
+                }
+            });
+        }
+
+        function sendComment(postId){
+            let msg = $('#input-comment-'+postId).val();
+            var sendData = {
+                "comment":msg
+            }
+
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                type: 'POST',
+                url: '/api/v1/posts/'+postId+'/comments',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                },
+                dataType:'json',
+                data: JSON.stringify(sendData),
+                success: function(response) {
+                    console.log(response)
+                    alert(response['resultCode']);
+                    window.location.reload();
+                },
+                error: function error(response){
+                    alert(response.responseJSON.result.message);
+                }
+            })
+        }
+        function sendLike(postId){
+            $.ajax({
+                type: 'POST',
+                url: '/api/v1/posts/'+postId+'/likes',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                },
+                success: function(response) {
+                    console.log(response)
+                    alert(response['resultCode']);
+                    window.location.reload();
+                },
+                error: function error(response){
+                    alert(response.responseJSON.result.message);
+                }
+            })
+        }
+        function getMyInfo(){
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/users/my',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                },
+                success: function (response){
+                    console.log(response['result']['userName']);
+                    loginUser.userName = response['result']['userName'];
+                    $('#username-main').text(response['result']['userName']);}
+            })
+        }
+
+        function likeListOfUser(){
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/posts/likes/my',
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                },
+                success: function (response){
+                    console.log(response['result']);
+                    loginUser.likeList = response['result'];
+                }
+            })
+        }
+
+        function heartToggle(postId){
+            if(loginUser.likeList.includes(postId)){
+                $('#heart-icon-'+postId).attr("src", "/img/heart_on.png");
+            }
+        }
+
+
+    </script>
+</body>
+</html>

@@ -34,7 +34,6 @@ public class User extends BaseEntity implements UserDetails {
     private String oauthId;
     private String name;
     private String email;
-//    private String imgUrl;
     private String introduction;
     private String refreshToken;
     public User update(String userName, String email){
