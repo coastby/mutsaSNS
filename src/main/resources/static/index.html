@@ -18,9 +18,17 @@
             <h4>Mutsa-SNS</h4>
         </div>
         <input id="searchInput" type="search" class="input-search" placeholder="검색">
+        <input id="login-id" type="text" class="input-search" placeholder="아이디">
+        <input id="login-pw" type="password" class="input-search" placeholder="비밀번호">
+        <button id="btn-login" class="submit-login" type="submit" onclick="login()">login</button>
+        <button id="btn-logout" class="submit-login hidden" type="submit" onclick="logout()" style="color: maroon">logout</button>
+
+
         <div class="nav-2">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/explore.png" alt="탐색">
             <img src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="하트">
+            <a href="/oauth2/authorization/google"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK5q0FP74VV9wbfwP378_7kj7iDomHuKrxkXsxDdUT28V9dlVMNUe-EMzaLwaFhneeuZI&usqp=CAU" alt="구글"></a>
+            <a href="/oauth2/authorization/naver"><img src="https://blog.kakaocdn.net/dn/czMTX6/btqNbvGUwIu/xxqSeZd4eRMvTHqbfIZUd0/img.png" alt="네이버"></a>
             <span class="point-span">My</span>
         </div>
     </div>
@@ -28,6 +36,17 @@
 <!-- main -->
 <main>
     <div class="feeds" id="feeds-box">
+        <form class="post-form">
+            <header>
+                <input name="title" id="post-title-input" class="post-inp" type="text" placeholder="제목을 입력하세요.">
+                <span class="userID main-id point-span" id="author-username">dlwlrma</span>
+            </header>
+            <div class="article-main">
+<!--                <label for="post-body-input"></label>-->
+                <textarea name="content" id="post-body-input" class="post-inp" placeholder="내용을 입력하세요."></textarea>
+            </div>
+            <button class="btn-write" type="submit" onclick="writePost()">글쓰기</button>
+        </form>
         <!-- article -->
         <article class="hidden">
             <header>
@@ -76,8 +95,6 @@
                 <button type="submit" class="" id="submit-comment" disabled>게시</button>
             </div>
         </article>
-
-
     </div>
     <!-- main-right -->
     <div class="main-right">
@@ -89,11 +106,38 @@
             </div>
         </div>
         <!-- alarm section -->
+        <!-- story section -->
+        <div class="section-story">
+            <div class="menu-title">
+                <span class="sub-title">알람</span>
+                <span class="find-more">모두 보기</span>
+            </div>
+            <ul class="story-list" id="alarm-list">
+<!--                <li>-->
+<!--                    <div class="gradient-wrap">-->
+<!--                        <img class="img-profile story" src="https://cdn-icons-png.flaticon.com/512/1230/1230203.png" alt="댓글알림">-->
+<!--                    </div>-->
+<!--                    <div class="profile-text">-->
+<!--                        <span class="userID point-span" style="color: #262626">NEW_COMMENT_ON_POST</span>-->
+<!--                        <span class="sub-span">28분 전</span>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--                <li>-->
+<!--                    <div class="gradient-wrap">-->
+<!--                        <img class="img-profile story" src="https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png" alt="좋아요알림">-->
+<!--                    </div>-->
+<!--                    <div class="profile-text">-->
+<!--                        <span class="userID point-span">dntlrdl</span>-->
+<!--                        <span class="sub-span">40분 전</span>-->
+<!--                    </div>-->
+<!--                </li>-->
+            </ul>
+        </div>
         <!-- recommendation section -->
 
         <footer>
             <p class="insta-sccript">
-                소개 ∙ 도움말 ∙ 홍보 센터 ∙ API ∙ 채용 정보 ∙ 개인정보처리방침 ∙ <br>약관 ∙ 위치 ∙ 인기계정 ∙ 해시태그 ∙ 언어
+                <a href="/oauth2/authorization/google">소개</a>> ∙ 도움말 ∙ 홍보 센터 ∙ API ∙ 채용 정보 ∙ 개인정보처리방침 ∙ <br>약관 ∙ 위치 ∙ 인기계정 ∙ 해시태그 ∙ 언어
                 <br><br>
                 © 2020 INSTAGRAM FROM FACEBOOK
             </p>
@@ -103,27 +147,34 @@
 
     <script>
         var loginUser = {
-            token: 'eyJhbGciOiJIUzM4NCJ9.eyJ1c2VyTmFtZSI6InN0cmluZ3giLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjczMjUyODk3LCJleHAiOjE2NzMyNTY0OTd9.uajT1XD27ljXlQdl9s9RkAquGP8YL80VNY1olbgoR6R0BP4gTNP0qdQx-RYiFgG5',
+            token: null,
             userName: '유저 이름',
             userId: null,
             likeList: []
         }
+        var nowPage = 0;
 
         $(document).ready(function () {
-            if (loginUser.token != null){
+            if (boolCheckCookie('token')){      //로그인된 상태
                 getMyInfo();
                 likeListOfUser();
-            }
-            showPost();
-            $('#username-main').text(loginUser.userName);
+                showAlarm();
+                let ob = document.getElementById('btn-logout');
+                ob.classList.remove('hidden');
 
+                document.getElementById('btn-login').classList.add('hidden');
+                document.getElementById('login-id').classList.add('hidden');
+                document.getElementById('login-pw').classList.add('hidden');
+            }
+            showPost(setMoreButton);
         });
 
 
         function showPost() {
+            var param = '?page=' + nowPage;
             $.ajax({
                 type: 'GET',
-                url: '/api/v1/posts',
+                url: '/api/v1/posts' + param,
                 data: {},
                 success: function (response) {
                     let posts = response['result']['content']
@@ -178,8 +229,18 @@
                         showLikeNum(id);
                         heartToggle(id);
                     }
+                    // var buttons = document.getElementsByClassName('btn-more');
+                    // buttons.remove();
+                    setMoreButton();
                 }
             });
+        }
+        function setMoreButton(){
+            let button_html = `
+                           <button class="btn-more" type="button" onclick="clickMore()">
+                                more
+                           </button>`
+            $('#feeds-box').append(button_html);
         }
         function showComment(postId){
             $.ajax({
@@ -228,7 +289,7 @@
                 url: '/api/v1/posts/'+postId+'/comments',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("Content-type","application/json");
-                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                    xhr.setRequestHeader("Authorization","Bearer " + getCookie('token'));
                 },
                 dataType:'json',
                 data: JSON.stringify(sendData),
@@ -248,7 +309,7 @@
                 url: '/api/v1/posts/'+postId+'/likes',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("Content-type","application/json");
-                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                    xhr.setRequestHeader("Authorization","Bearer " + getCookie('token'));
                 },
                 success: function(response) {
                     console.log(response)
@@ -266,12 +327,14 @@
                 url: '/api/v1/users/my',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("Content-type","application/json");
-                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                    xhr.setRequestHeader("Authorization","Bearer " + getCookie('token'));
                 },
                 success: function (response){
                     console.log(response['result']['userName']);
-                    loginUser.userName = response['result']['userName'];
-                    $('#username-main').text(response['result']['userName']);}
+                    $('#username-main').text(response['result']['userName']);
+                    $('#author-username').text(response['result']['userName']);
+
+                }
             })
         }
 
@@ -281,7 +344,7 @@
                 url: '/api/v1/posts/likes/my',
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader("Content-type","application/json");
-                    xhr.setRequestHeader("Authorization","Bearer " + loginUser.token);
+                    xhr.setRequestHeader("Authorization","Bearer " + getCookie('token'));
                 },
                 success: function (response){
                     console.log(response['result']);
@@ -294,6 +357,139 @@
             if(loginUser.likeList.includes(postId)){
                 $('#heart-icon-'+postId).attr("src", "/img/heart_on.png");
             }
+        }
+
+        function clickMore(){
+            let buttons = document.getElementsByClassName('btn-more');
+            for(var i = 0; i < buttons.length; i++)
+            {
+                buttons[i].classList.add('hidden');
+            }
+            nowPage += 1;
+            showPost(setMoreButton);
+        }
+        function writePost(){
+            let title = $('#post-title-input').val();
+            let body = $('#post-body-input').val();
+            var sendData = {
+                "title":title,
+                "body":body
+            }
+
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                url: "/api/v1/posts",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization","Bearer " + getCookie('token'));
+                },
+                dataType:'json',
+                data: JSON.stringify(sendData),
+                success: function(response) {
+                    console.log(response)
+                    alert(response['resultCode']);
+                    window.location.reload();
+                },
+                error: function error(response){
+                    alert(response.responseJSON.result.message);
+                }
+            })
+        }
+        function login() {
+            let userName = $('#login-id').val();
+            let password = $('#login-pw').val();
+            var sendData = {
+                "userName":userName,
+                "password":password
+            }
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                url: "/api/v1/users/login",
+                dataType:'json',
+                data: JSON.stringify(sendData),
+                success: function(response) {
+                    let token = response['result']['jwt'];
+                    console.log(token);
+                    alert(response['resultCode']);
+                    setCookie('token', token, 60 * 60);
+                    console.log(getCookie('token'));
+                    window.location.reload();
+                },
+                error: function error(response){
+                    alert(response.responseJSON.result.message);
+                }
+            })
+        }
+        function logout(){
+            delCookie('token');
+            window.location.reload();
+        }
+        //쿠키 저장
+        // expiredays 는 일자 정수 - 365년 1년 쿠키
+        function setCookie(key, value, expiredays) {
+            let todayDate = new Date();
+            todayDate.setDate(todayDate.getDate() + expiredays); // 현재 시각 + 일 단위로 쿠키 만료 날짜 변경
+            //todayDate.setTime(todayDate.getTime() + (expiredays * 24 * 60 * 60 * 1000)); // 밀리세컨드 단위로 쿠키 만료 날짜 변경
+            document.cookie = key + "=" + escape(value) + "; path=/; expires=" + todayDate.toGMTString() + ";";
+        }
+        // 쿠키 읽기
+        function getCookie(key){
+            key = new RegExp(key + '=([^;]*)'); // 쿠키들을 세미콘론으로 구분하는 정규표현식 정의
+            return key.test(document.cookie) ? unescape(RegExp.$1) : ''; // 인자로 받은 키에 해당하는 키가 있으면 값을 반환
+        }
+        //쿠키 체크 - 있으면 true 없으면 false
+        //getCookie() 에 의존
+        function boolCheckCookie(key) {
+            return getCookie(key) != '' ? true : false;
+        }
+        //쿠키 삭제
+        //쿠키는 삭제가 없어서 현재 시각으로 만료 처리를 함.
+        function delCookie(key){
+            let todayDate = new Date();
+            document.cookie = key + "=; path=/; expires=" + todayDate.toGMTString() + ";" // 현재 시각 이전이면 쿠키가 만료되어 사라짐.
+        }
+        function showAlarm(){
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/alarms',
+                data: {},
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Content-type","application/json");
+                    xhr.setRequestHeader("Authorization","Bearer " + getCookie('token'));
+                },
+                success: function (response) {
+                    let alarms = response['result']['content']
+                    console.log(alarms);
+                    for (let i = 0; i < alarms.length; i++) {
+                        let alarmType = alarms[i]['alarmType'];
+                        let createdAt = alarms[i]['createdAt'];
+                        let targetId = alarms[i]['targetId'];
+                        let text = alarms[i]['text'];
+
+                        let src;
+                        if(alarmType === 'NEW_COMMENT_ON_POST'){
+                            src = "https://cdn-icons-png.flaticon.com/512/1230/1230203.png";
+                        } else{
+                            src = "https://s3.ap-northeast-2.amazonaws.com/cdn.wecode.co.kr/bearu/heart.png";
+                        }
+
+                        let temp_html = `
+                                <li>
+                                    <div class="gradient-wrap">
+                                        <img class="img-profile story" src="${src}" alt="알림아이콘">
+                                    </div>
+                                    <div class="profile-text">
+                                        <span class="userID point-span" style="color: #262626">${text}</span>
+                                        <span class="sub-span">${createdAt}</span>
+                                    </div>
+                                </li>
+                        `
+                        $('#alarm-list').append(temp_html);
+                    }
+                }
+            });
         }
 
 
