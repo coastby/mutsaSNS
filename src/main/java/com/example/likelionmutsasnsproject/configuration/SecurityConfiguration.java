@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                 "/swagger-resources/**", "/configuration/security", "/webjars/**",
                 "/swagger-ui.html", "/swagger/**", "/swagger-ui/**"};
     private final String[] UI = {
-                "/api/v1/hello/**", "/css/**", "/img/**", "/static/**", "/resources/**"};
+                "/api/v1/hello/**", "/css/**", "/img/**", "/static/**", "/resources/**", "/", "/index"};
     private final String[] AUTHORIZATION = {
                 "/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception",
                 "/oauth2/authorization/**"};
