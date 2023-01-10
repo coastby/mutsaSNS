@@ -1,8 +1,8 @@
 package com.example.likelionmutsasnsproject.security;
 
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.domain.user.OAuthAttributes;
-import com.example.likelionmutsasnsproject.domain.user.UserProfile;
+import com.example.likelionmutsasnsproject.dto.user.OAuthAttributes;
+import com.example.likelionmutsasnsproject.dto.user.UserProfile;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -46,11 +45,6 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
                 .authorities(List.of(new SimpleGrantedAuthority(user.getRole().name())))
                 .attributes(oAuth2User.getAttribute("response"))
                 .build();
-
-//        return new UserProfile(
-//                userProfile.getUserName(),
-//                List.of(new SimpleGrantedAuthority(user.getRole().name())),
-//                attributes);
     }
     private User saveOrUpdate(UserProfile userProfile){
         String userName = userProfile.getUserName();

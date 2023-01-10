@@ -1,13 +1,11 @@
 package com.example.likelionmutsasnsproject.util;
 
-import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.domain.user.UserProfile;
+import com.example.likelionmutsasnsproject.dto.user.UserProfile;
 import com.example.likelionmutsasnsproject.dto.user.UserRole;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
 import com.example.likelionmutsasnsproject.service.UserDetailsServiceImpl;
-import com.example.likelionmutsasnsproject.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 @Component
 @Slf4j

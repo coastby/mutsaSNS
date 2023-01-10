@@ -7,6 +7,7 @@ import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.fixture.TestInfoFixture;
 import com.example.likelionmutsasnsproject.fixture.UserEntityFixture;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
+import com.example.likelionmutsasnsproject.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,11 +23,12 @@ import static org.mockito.Mockito.verify;
 class UserServiceTest {
     private UserService userService;
     private UserRepository userRepository = mock(UserRepository.class);
+    private JwtUtil jwtUtil = mock(JwtUtil.class);
     private TestInfoFixture.TestInfo fixture;
 
     @BeforeEach
     void setUp(){
-        userService = new UserService(userRepository, mock(BCryptPasswordEncoder.class));
+        userService = new UserService(jwtUtil, userRepository, mock(BCryptPasswordEncoder.class));
         fixture = TestInfoFixture.get();
     }
     /**

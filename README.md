@@ -1,6 +1,6 @@
 ### 프로젝트 목표
 
-- SpringBoot + JPA + JWT 를 이용하여 트위터와 유사한 SNS 서비스를 만든다.
+- SpringBoot + JPA + JWT 를 이용하여 유사한 SNS 서비스를 만든다.
 
 
 ### 프로젝트 결과
@@ -101,7 +101,7 @@
 
 #### ‣ [UI 개발](https://gaudy-vein-afc.notion.site/UI-ea15ce629ddb44458d1287f70f52695f)
 - [x] 기능 개발
-  ![img_2.png](img_2.png)
+  ![img_4.png](img_4.png)
 
 
 

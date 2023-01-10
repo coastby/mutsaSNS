@@ -1,15 +1,8 @@
 package com.example.likelionmutsasnsproject.security;
 
-import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.domain.user.UserProfile;
-import com.example.likelionmutsasnsproject.dto.Response;
-import com.example.likelionmutsasnsproject.dto.user.UserJoinResponse;
+import com.example.likelionmutsasnsproject.dto.user.UserProfile;
 import com.example.likelionmutsasnsproject.dto.user.UserLoginResponse;
 import com.example.likelionmutsasnsproject.dto.user.UserRole;
-import com.example.likelionmutsasnsproject.exception.ErrorCode;
-import com.example.likelionmutsasnsproject.exception.ErrorResponse;
-import com.example.likelionmutsasnsproject.exception.UserException;
-import com.example.likelionmutsasnsproject.util.CookieUtil;
 import com.example.likelionmutsasnsproject.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,25 +10,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static com.example.likelionmutsasnsproject.security.CookieAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Slf4j
 @Component
@@ -46,6 +28,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final JwtUtil jwtUtil;
     private final CookieAuthorizationRequestRepository authorizationRequestRepository;
 
+    /**주석들은 redirect 구현 시 사용예정**/
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 //        String targetUrl = determineTargetUrl(request, response, authentication);

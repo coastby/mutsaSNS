@@ -1,13 +1,11 @@
 package com.example.likelionmutsasnsproject.service;
 
 import com.example.likelionmutsasnsproject.domain.User;
-import com.example.likelionmutsasnsproject.dto.user.UserJoinRequest;
-import com.example.likelionmutsasnsproject.dto.user.UserJoinResponse;
-import com.example.likelionmutsasnsproject.dto.user.UserResponse;
-import com.example.likelionmutsasnsproject.dto.user.UserRoleResponse;
+import com.example.likelionmutsasnsproject.dto.user.*;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.repository.UserRepository;
+import com.example.likelionmutsasnsproject.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final JwtUtil jwtUtil;
+
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
 
-
+    @Transactional
     public UserJoinResponse join(UserJoinRequest request) {
         //아이디 중복 시 예외 발생
         userRepository.findByUserName(request.getUserName())
@@ -29,6 +29,21 @@ public class UserService {
         User saved = userRepository.save(request.toEntity(encoder.encode(request.getPassword())));
 
         return UserJoinResponse.from(saved);
+    }
+    @Transactional
+    public UserLoginResponse login(UserLoginRequest request) {
+        //아이디가 존재하는지 확인
+        User user = userRepository.findByUserName(request.getUserName())
+                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, "아이디가 틀렸습니다."));
+
+        //비밀번호가 일치하는지 확인
+        if(!encoder.matches(request.getPassword(), user.getPassword())){
+            throw new UserException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        //토큰 생성
+        String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+        return new UserLoginResponse(token);
     }
     public User getUserByUserName(String userName){
         return userRepository.findByUserName(userName)

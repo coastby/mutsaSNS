@@ -6,7 +6,6 @@ import com.example.likelionmutsasnsproject.dto.user.*;
 import com.example.likelionmutsasnsproject.exception.ErrorResponse;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
-import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -27,7 +26,6 @@ import java.net.URI;
 @Api(tags = "사용자")
 public class UserRestController {
     private final UserService userService;
-    private final UserLoginService userLoginService;
 
     @Operation(summary = "회원 가입", description = "아이디 중복 불가능")
     @PostMapping(value = "/join")       //회원가입
@@ -40,7 +38,7 @@ public class UserRestController {
     @Operation(summary = "로그인", description = "로그인 시 jwt 발급")
     @PostMapping(value = "/login")
     public ResponseEntity<Response<UserLoginResponse>> login(@RequestBody UserLoginRequest request){
-        UserLoginResponse response = userLoginService.login(request);
+        UserLoginResponse response = userService.login(request);
         return ResponseEntity.ok().body(Response.success(response));
     }
     @ApiIgnore

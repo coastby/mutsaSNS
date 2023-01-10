@@ -1,19 +1,11 @@
-package com.example.likelionmutsasnsproject.domain.user;
+package com.example.likelionmutsasnsproject.dto.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.json.JsonReadFeature;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonParser;
 
 
 @AllArgsConstructor
@@ -46,16 +38,6 @@ public enum OAuthAttributes {       //OAuth 서비스에 따라 얻어온 유저
                 )
                 .build();
     });
-
-
-//    KAKAO("kakao", (attributes) -> {  //--> 보류
-//        return Map.of(
-//                "oauthId", String.valueOf(attributes.get("id")),
-//                "name", (String) attributes.get("nickname"),
-//                "email", (String) attributes.get("email")
-//        );
-//    });
-
     private final String registrationId;
     private final Function<OAuth2User, UserProfile> setUserInfo;
 
@@ -67,8 +49,4 @@ public enum OAuthAttributes {       //OAuth 서비스에 따라 얻어온 유저
                 .orElseThrow(IllegalArgumentException::new)
                 .setUserInfo.apply(oAuth2User);
     }
-//    private static JsonNode json(String content) {
-//        String canonicalFormat = JsonParser.parseString(content).toString();
-//        return json.readTree(canonicalFormat);
-//    }
 }

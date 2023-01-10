@@ -4,7 +4,6 @@ import com.example.likelionmutsasnsproject.annotation.WithMockCustomUser;
 import com.example.likelionmutsasnsproject.dto.user.*;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.UserException;
-import com.example.likelionmutsasnsproject.service.UserLoginService;
 import com.example.likelionmutsasnsproject.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -30,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserRestControllerTest {
     @MockBean
     UserService userService;
-    @MockBean
-    UserLoginService userLoginService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
@@ -83,7 +80,7 @@ class UserRestControllerTest {
         @Test
         @DisplayName("로그인 성공")
         void login_success() throws Exception {
-            given(userLoginService.login(userLoginRequest))
+            given(userService.login(userLoginRequest))
                     .willReturn(new UserLoginResponse("token"));
 
             mockMvc.perform(
@@ -94,12 +91,12 @@ class UserRestControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.result.jwt").value("token"))
                     .andDo(print());
-            verify(userLoginService).login(userLoginRequest);
+            verify(userService).login(userLoginRequest);
         }
         @Test
         @DisplayName("로그인 실패 - 아이디가 없는 경우")
         void login_fail_유저네임_없음() throws Exception {
-            given(userLoginService.login(userLoginRequest))
+            given(userService.login(userLoginRequest))
                     .willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
             mockMvc.perform(
@@ -111,12 +108,12 @@ class UserRestControllerTest {
                     .andExpect(jsonPath("$.result.errorCode").value("USERNAME_NOT_FOUND"))
                     .andExpect(jsonPath("$.result.message").value("Not founded"))
                     .andDo(print());
-            verify(userLoginService).login(userLoginRequest);
+            verify(userService).login(userLoginRequest);
         }
         @Test
         @DisplayName("로그인 실패 - 비밀번호 틀림")
         void login_fail_비밀번호_틀림() throws Exception {
-            given(userLoginService.login(userLoginRequest))
+            given(userService.login(userLoginRequest))
                     .willThrow(new UserException(ErrorCode.INVALID_PASSWORD));
 
             mockMvc.perform(
@@ -128,7 +125,7 @@ class UserRestControllerTest {
                     .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"))
                     .andExpect(jsonPath("$.result.message").value("패스워드가 잘못되었습니다."))
                     .andDo(print());
-            verify(userLoginService).login(userLoginRequest);
+            verify(userService).login(userLoginRequest);
         }
     }
     @Nested

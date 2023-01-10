@@ -1,4 +1,4 @@
-package com.example.likelionmutsasnsproject.domain.user;
+package com.example.likelionmutsasnsproject.dto.user;
 
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.user.UserRole;
