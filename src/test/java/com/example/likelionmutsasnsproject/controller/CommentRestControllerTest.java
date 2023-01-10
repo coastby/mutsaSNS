@@ -60,6 +60,7 @@ class CommentRestControllerTest {
     /** 댓글 리스트 조회**/
     @Test
     @DisplayName("댓글 리스트 조회 성공")
+    @WithMockUser
     void comment_list_success() throws Exception {
         //가짜 Page 객체
         Page<CommentResponse> responsePage = new PageImpl<>(List.of(response));
@@ -77,7 +78,7 @@ class CommentRestControllerTest {
 
     @Nested
     @DisplayName("댓글 작성")
-//    @WithMockCustomUser
+    @WithMockUser
     class addTest{
         @Test
         @DisplayName("댓글 작성 성공")
@@ -107,7 +108,7 @@ class CommentRestControllerTest {
                             .with(csrf())
                             .content(objectMapper.writeValueAsBytes(request))
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isFound())
                     .andDo(print());
         }
         @Test
@@ -130,7 +131,7 @@ class CommentRestControllerTest {
     }
     @Nested
     @DisplayName("댓글 수정")
-    @WithMockCustomUser
+    @WithMockUser
     class editTest {
         @Test
         @DisplayName("댓글 수정 성공")
@@ -162,7 +163,7 @@ class CommentRestControllerTest {
                                     .with(csrf())
                                     .content(objectMapper.writeValueAsBytes(request))
                                     .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isFound())
                     .andDo(print());
         }
         @Test
@@ -225,7 +226,7 @@ class CommentRestControllerTest {
     }
     @Nested
     @DisplayName("댓글 삭제")
-    @WithMockCustomUser
+    @WithMockUser
     class deleteTest {
         @Test
         @DisplayName("댓글 삭제 성공")
@@ -254,7 +255,7 @@ class CommentRestControllerTest {
             mockMvc.perform(
                             delete("/api/v1/posts/" + postId + "/comments/"+1)
                                     .with(csrf()))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isFound())
                     .andDo(print());
         }
         @Test

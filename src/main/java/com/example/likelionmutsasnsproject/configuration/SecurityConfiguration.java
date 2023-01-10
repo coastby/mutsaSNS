@@ -30,6 +30,11 @@ public class SecurityConfiguration {
                 "/v3/api-docs",
                 "/swagger-resources/**", "/configuration/security", "/webjars/**",
                 "/swagger-ui.html", "/swagger/**", "/swagger-ui/**"};
+    private final String[] UI = {
+                "/api/v1/hello/**", "/css/**", "/img/**", "/index", "/", "/test-results"};
+    private final String[] AUTHORIZATION = {
+                "/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception",
+                "/oauth2/authorization/**"};
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
@@ -41,10 +46,9 @@ public class SecurityConfiguration {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/hello/**", "/css/**", "/img/**", "/index", "/").permitAll()
+                .antMatchers(UI).permitAll()
                 .antMatchers(SWAGGER).permitAll()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login","/api/v1/users/exception",
-                        "/oauth2/authorization/**").permitAll()
+                .antMatchers(AUTHORIZATION).permitAll()
                 .antMatchers("/api/v1/posts/my").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/v1/posts/**").permitAll()
                 .antMatchers("/api/v1/users/*/role/change").access("hasRole('ADMIN')")

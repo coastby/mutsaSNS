@@ -35,7 +35,7 @@ class LikeRestControllerTest {
 
     @Nested
     @DisplayName("좋아요 누르기")
-    @WithMockCustomUser
+    @WithMockUser
     class addLike{
         Integer postId = 1;
         @Test
@@ -59,7 +59,7 @@ class LikeRestControllerTest {
             mockMvc.perform(
                             post("/api/v1/posts/"+postId+"/likes")
                                     .with(csrf()))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isFound())
                     .andDo(print());
         }
         @Test

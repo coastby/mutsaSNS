@@ -6,11 +6,13 @@ import com.example.likelionmutsasnsproject.domain.Post;
 import com.example.likelionmutsasnsproject.domain.User;
 import com.example.likelionmutsasnsproject.dto.comment.CommentRequest;
 import com.example.likelionmutsasnsproject.dto.comment.CommentResponse;
+import com.example.likelionmutsasnsproject.dto.comment.CommentWorkResponse;
 import com.example.likelionmutsasnsproject.exception.CommentException;
 import com.example.likelionmutsasnsproject.exception.ErrorCode;
 import com.example.likelionmutsasnsproject.exception.PostException;
 import com.example.likelionmutsasnsproject.exception.UserException;
 import com.example.likelionmutsasnsproject.fixture.CommentEntityFixture;
+import com.example.likelionmutsasnsproject.fixture.PostEntityFixture;
 import com.example.likelionmutsasnsproject.fixture.TestInfoFixture;
 import com.example.likelionmutsasnsproject.fixture.UserEntityFixture;
 import com.example.likelionmutsasnsproject.repository.CommentRepository;
@@ -60,6 +62,7 @@ class CommentServiceTest {
     @Nested
     @DisplayName("댓글 수정")
     class edit{
+        Post targetPost = PostEntityFixture.get("user", "pw", false);
         @Test
         @DisplayName("댓글 수정 성공")
         void edit_success(){
@@ -74,8 +77,15 @@ class CommentServiceTest {
                     new Timestamp(System.currentTimeMillis()),
                     Timestamp.class
             );
+            ReflectionTestUtils.setField(
+                    saved,
+                    BaseEntity.class,
+                    "createdAt",
+                    comment.getCreatedAt(),
+                    Timestamp.class
+            );
 
-            given(postService.getPostByPostId(1)).willReturn(new Post());
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
             given(commentRepository.findById(1)).willReturn(Optional.of(comment));
             given(userService.getUserByUserName("user")).willReturn(UserEntityFixture.get("user", "pw"));
             given(commentRepository.saveAndFlush(any())).willReturn(saved);
@@ -106,7 +116,7 @@ class CommentServiceTest {
             CommentRequest request = new CommentRequest("바뀐 댓글");
             Comment comment = CommentEntityFixture.get("user", "pw", false);
 
-            given(postService.getPostByPostId(1)).willReturn(new Post());
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
             given(commentRepository.findById(1)).willReturn(Optional.of(comment));
             given(userService.getUserByUserName("NotAuthor")).willReturn(UserEntityFixture.get("NotAuthor", "pw"));
 
@@ -120,12 +130,79 @@ class CommentServiceTest {
             CommentRequest request = new CommentRequest("바뀐 댓글");
             Comment comment = CommentEntityFixture.get("user", "pw", false);
 
-            given(postService.getPostByPostId(1)).willReturn(new Post());
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
             given(commentRepository.findById(1)).willReturn(Optional.of(comment));
             given(userService.getUserByUserName("NotUser")).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
             UserException e =
                     assertThrows(UserException.class, () -> commentService.edit(1, 1, request, "NotUser"));
+            assertEquals(ErrorCode.USERNAME_NOT_FOUND, e.getErrorCode());
+        }
+    }
+    @Nested
+    @DisplayName("댓글 삭제")
+    class delete{
+        Post targetPost = PostEntityFixture.get("user", "pw", false);
+        @Test
+        @DisplayName("댓글 삭제 성공")
+        void delete_success(){
+            Comment comment = CommentEntityFixture.get("user", "pw", false);
+
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
+            given(commentRepository.findById(1)).willReturn(Optional.of(comment));
+            given(userService.getUserByUserName("user")).willReturn(UserEntityFixture.get("user", "pw"));
+
+            CommentWorkResponse response =
+                    assertDoesNotThrow(() -> commentService.delete(1, 1, "user"));
+            assertEquals("댓글 삭제 완료", response.getMessage());
+            assertEquals(1, response.getId());
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - 포스트 존재하지 않음")
+        void delete_fail_포스트없음(){
+            CommentRequest request = new CommentRequest("바뀐 댓글");
+
+            given(postService.getPostByPostId(1)).willThrow(new PostException(ErrorCode.POST_NOT_FOUND));
+
+            PostException e =
+                    assertThrows(PostException.class, () -> commentService.delete(1, 1, "user"));
+            assertEquals(ErrorCode.POST_NOT_FOUND, e.getErrorCode());
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - 댓글 존재하지 않음")
+        void delete_fail_댓글없음(){
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
+            given(commentRepository.findById(1)).willReturn(Optional.empty());
+
+            CommentException e =
+                    assertThrows(CommentException.class, () -> commentService.delete(1, 1, "user"));
+            assertEquals(ErrorCode.COMMENT_NOT_FOUND, e.getErrorCode());
+        }
+        @Test
+        @DisplayName("댓글 삭제 실패 - 작성자 불일치")
+        void delete_fail_작성자불일치(){
+            CommentRequest request = new CommentRequest("바뀐 댓글");
+            Comment comment = CommentEntityFixture.get("user", "pw", false);
+
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
+            given(commentRepository.findById(1)).willReturn(Optional.of(comment));
+            given(userService.getUserByUserName("NotAuthor")).willReturn(UserEntityFixture.get("NotAuthor", "pw"));
+
+            UserException e =
+                    assertThrows(UserException.class, () -> commentService.delete(1, 1, "NotAuthor"));
+            assertEquals(ErrorCode.INVALID_PERMISSION, e.getErrorCode());
+        }
+        @Test
+        @DisplayName("댓글 수정 실패 - 유저 존재하지 않음")
+        void delete_fail_유저없음(){
+            Comment comment = CommentEntityFixture.get("user", "pw", false);
+
+            given(postService.getPostByPostId(1)).willReturn(targetPost);
+            given(commentRepository.findById(1)).willReturn(Optional.of(comment));
+            given(userService.getUserByUserName("NotUser")).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
+
+            UserException e =
+                    assertThrows(UserException.class, () -> commentService.delete(1, 1, "NotUser"));
             assertEquals(ErrorCode.USERNAME_NOT_FOUND, e.getErrorCode());
         }
     }

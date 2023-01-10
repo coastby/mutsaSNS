@@ -2,23 +2,23 @@
 
 - SpringBoot + JPA + JWT 를 이용하여 트위터와 유사한 SNS 서비스를 만든다.
 
-### 미션 요구사항 분석 & 체크리스트
 
----
+### 프로젝트 결과
+ 
 [📎 노션 프로젝트 페이지](https://www.notion.so/0111dd15420243a19ed94263bc07932d)
 
 [📎 Swagger-ui](http://ec2-13-125-252-76.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/)
 
-[📎 서비스 페이지](http://ec2-13-125-252-76.ap-northeast-2.compute.amazonaws.com:8080/)
+[📎 서비스 UI](http://ec2-13-125-252-76.ap-northeast-2.compute.amazonaws.com:8080/)
 
----
+### 미션 요구사항 분석 & 체크리스트
+
 #### 📌 프로젝트 기술스택
 - 에디터 : Intellij Ultimate
 - 개발 툴 : SpringBoot 2.7.6
 - 자바 : JAVA 11
 - 빌드 : Gradle 6.8
 - 서버 : AWS EC2
-- 배포 : Docker
 - 데이터베이스 : MySql 8.0
 - 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security, JWT, Swagger, Oauth2-client
 

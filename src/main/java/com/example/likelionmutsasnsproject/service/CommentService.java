@@ -76,7 +76,7 @@ public class CommentService {
         }
         Post post = postService.getPostByPostId(postId);    //포스트가 없거나 삭제되었으면 예외 발생
         Comment comment = getCommentById(id);
-        if(comment.getPost().getId() != post.getId()) {
+        if(!post.getId().equals(comment.getPost().getId())) {
             throw new CommentException(ErrorCode.COMMENT_NOT_FOUND, "해당 포스트에 있는 댓글이 아닙니다.");}
         if(!validateUserToComment(comment, userName)){
             throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 댓글만 수정/삭제할 수 있습니다.");}
@@ -89,7 +89,7 @@ public class CommentService {
     public CommentWorkResponse delete(Integer postId, Integer id, String userName) {
         Post post = postService.getPostByPostId(postId);    //포스트가 없거나 삭제되었으면 예외 발생
         Comment comment = getCommentById(id);               //댓글 아이디에 해당하는 댓글이 없으면 예외 발생
-        if(comment.getPost().getId() != post.getId()) {     //포스트에 있는 댓글이 아니면 예외 발생
+        if(!post.getId().equals(comment.getPost().getId())) {     //포스트에 있는 댓글이 아니면 예외 발생
             throw new CommentException(ErrorCode.COMMENT_NOT_FOUND, "해당 포스트에 있는 댓글이 아닙니다.");}
         if(!validateUserToComment(comment, userName)){
             throw new UserException(ErrorCode.INVALID_PERMISSION, "본인이 작성한 댓글만 수정/삭제할 수 있습니다.");

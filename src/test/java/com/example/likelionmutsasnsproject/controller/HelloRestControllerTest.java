@@ -34,7 +34,7 @@ class HelloRestControllerTest {
 
         mockMvc.perform(
                 get("/api/v1/nice"))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isFound())
 //                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"))
                 .andDo(print());
     }

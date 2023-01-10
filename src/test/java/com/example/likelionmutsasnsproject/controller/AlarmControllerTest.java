@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(AlarmController.class)
-//@WithMockCustomUser
 @WithMockUser
 class AlarmControllerTest {
     @MockBean
@@ -68,7 +67,7 @@ class AlarmControllerTest {
         mockMvc.perform(
                         get("/api/v1/alarms")
                                 .with(csrf()))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isFound())  //OAuth 적용 후
                 .andDo(print());
     }
 }
