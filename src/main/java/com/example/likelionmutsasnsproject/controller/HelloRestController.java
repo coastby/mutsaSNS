@@ -25,10 +25,6 @@ public class HelloRestController {
     public ResponseEntity<String> sayGood() {
         return ResponseEntity.ok().body("good");
     }
-    @GetMapping(value = "/nice")
-    public ResponseEntity<String> sayNice() {
-        return ResponseEntity.ok().body("nice");
-    }
     @GetMapping(value = "/hello/{num}")
     public ResponseEntity<String> devide(@PathVariable int num) {
         return ResponseEntity.ok().body(helloService.sumOfDigit(num));
