@@ -49,7 +49,6 @@ public class PostService {
     public Post getPostByPostId(Integer postId){
         //포스트가 없거나 삭제되었으면 예외 발생
         return postRepository.findById(postId)
-                .filter(x -> (!x.isDeleted()))
                 .orElseThrow(()->new PostException(ErrorCode.POST_NOT_FOUND));
     }
     // 1) user가 존재하고 2) ADMIN이면 3) 작성자와 유저가 동일하면 true 반환

@@ -25,6 +25,4 @@ public class AlarmService {
     public void saveAlarm(Alarm alarm){
         Alarm saved = alarmRepository.save(alarm);
     }
-
-
 }

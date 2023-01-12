@@ -43,7 +43,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private void writeTokenResponse(HttpServletResponse response, Authentication authentication) throws IOException {
         //JWT 생성
-//        String userName = User.getUserNameFromAuthentication(authentication); //-> 안 됨
         UserProfile user = (UserProfile) authentication.getPrincipal();
         String userName = user.getName();
 

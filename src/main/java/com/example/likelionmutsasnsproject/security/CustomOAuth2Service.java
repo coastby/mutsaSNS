@@ -34,17 +34,19 @@ public class CustomOAuth2Service implements OAuth2UserService<OAuth2UserRequest,
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId(); //사용한 OAuth 서비스 이름
         //OAuth 서비스에 따라 유저정보를 공통된 class인 UserProfile 객체로 만들어 준다.
-        UserProfile userProfile = OAuthAttributes.extract(registrationId, oAuth2User);
+        UserProfile userProfile = OAuthAttributes.extract(registrationId, oAuth2User); /**attribute만 넘기도록 리팩토링 필요**/
 
         User user = saveOrUpdate(userProfile);      //DB에 저장
         log.info("userName : {}", oAuth2User.getName());
-//        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-//                .getUserInfoEndpoint().getUserNameAttributeName();      //OAuth 로그인 시 키(pK)가 되는 값
-        return UserProfile.builder()
-                .userName(userProfile.getUserName())
-                .authorities(List.of(new SimpleGrantedAuthority(user.getRole().name())))
-                .attributes(oAuth2User.getAttribute("response"))
-                .build();
+        return userProfile;
+
+        /**리팩토링할 때 쓸 거**/
+//        return UserProfile.builder()
+//                .userName(userProfile.getUserName())
+////                .authorities(List.of(new SimpleGrantedAuthority(user.getRole().name())))
+//                .authorities(userProfile.getAuthorities())
+//                .attributes(oAuth2User.getAttribute("response"))
+//                .build();
     }
     private User saveOrUpdate(UserProfile userProfile){
         String userName = userProfile.getUserName();
